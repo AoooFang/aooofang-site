@@ -9321,6 +9321,50 @@ html.photo-lightbox-lock body {
     const AIGC_UPLOAD_MAX_STORED_CHARS = 42000;
     const AIGC_UPLOAD_EMERGENCY_STORED_CHARS = 24000;
     const AIGC_UPLOAD_QUALITY_STEPS = [.76, .66, .56, .46, .36];
+
+    /* ===== Static portfolio image mapping for GitHub/Vercel deployment =====
+       Put your image files in English folders like:
+       assets/portfolio/ai-ppt/ai-ppt1.jpg ... ai-ppt20.jpg
+       The second prefix in each list also supports flat filenames such as assetsportfolioai-ppt1.jpg. */
+    const PORTFOLIO_STATIC_IMAGE_EXTENSIONS = [".jpg", ".png", ".jpeg", ".webp", ".JPG", ".PNG", ".JPEG", ".WEBP", ""];
+    const PORTFOLIO_STATIC_IMAGE_SETS = {
+      "aigc:ppt": {
+        count: 20,
+        prefixes: ["assets/portfolio/ai-ppt/ai-ppt", "assetsportfolioai-ppt"]
+      },
+      "aigc:poster": {
+        count: 2,
+        prefixes: ["assets/portfolio/ai-poster/ai-poster", "assetsportfolioai-poster"]
+      },
+      "aigc:portrait": {
+        count: 37,
+        prefixes: ["assets/portfolio/ai-portrait/ai-portrait", "assetsportfolioai-portrait"]
+      },
+      "portfolio:poster": {
+        count: 11,
+        prefixes: ["assets/portfolio/graphic-design/graphic-design", "assetsportfoliographic-design"]
+      },
+      "portfolio:cover": {
+        count: 10,
+        prefixes: ["assets/portfolio/packaging-design/packaging-design", "assetsportfoliopackaging-design"]
+      },
+      "portfolio:brand": {
+        count: 12,
+        prefixes: ["assets/portfolio/ui-design/ui-design", "assetsportfolioui-design"]
+      },
+      "portfolio:type": {
+        count: 9,
+        prefixes: ["assets/portfolio/collateral-design/collateral-design", "assetsportfoliocollateral-design"]
+      },
+      "portfolio:ip": {
+        count: 8,
+        prefixes: ["assets/portfolio/ip-design/ip-design", "assetsportfolioip-design"]
+      },
+      "portfolio:wechat": {
+        count: 6,
+        prefixes: ["assets/portfolio/wechat-design/wechat-design", "assetsportfoliowechat-design"]
+      }
+    };
     let currentAigcCollectionKey = "aigc:ppt";
     let currentAigcCollection = null;
     let currentAigcCollectionSource = "ppt";
@@ -9341,12 +9385,59 @@ html.photo-lightbox-lock body {
       return `${AIGC_UPLOAD_STORAGE_PREFIX}${currentAigcCollectionKey}:${number}`;
     }
 
-    function getUploadedImage(number) {
+    function getStoredUploadedImage(number) {
       try {
         return localStorage.getItem(getUploadStorageKey(number)) || "";
       } catch (error) {
         return "";
       }
+    }
+
+    function getPortfolioStaticImageConfig() {
+      return PORTFOLIO_STATIC_IMAGE_SETS[currentAigcCollectionKey] || null;
+    }
+
+    function getPortfolioStaticImageCandidates(number) {
+      const config = getPortfolioStaticImageConfig();
+      const numeric = parseInt(String(number || "").replace(/^0+/, "") || "0", 10);
+      if (!config || !Number.isFinite(numeric) || numeric < 1 || numeric > config.count) return [];
+
+      const raw = String(numeric);
+      const padded = String(numeric).padStart(2, "0");
+      const suffixes = raw === padded ? [raw] : [raw, padded];
+      const prefixes = Array.isArray(config.prefixes) ? config.prefixes : [];
+      const extensions = Array.isArray(config.extensions) ? config.extensions : PORTFOLIO_STATIC_IMAGE_EXTENSIONS;
+      const candidates = [];
+
+      prefixes.forEach(prefix => {
+        suffixes.forEach(suffix => {
+          extensions.forEach(ext => candidates.push(`${prefix}${suffix}${ext}`));
+        });
+      });
+      return candidates;
+    }
+
+    function getUploadedImage(number) {
+      const storedImage = getStoredUploadedImage(number);
+      if (storedImage) return storedImage;
+      const staticCandidates = getPortfolioStaticImageCandidates(number);
+      return staticCandidates[0] || "";
+    }
+
+    function escapeCssUrl(value) {
+      return String(value || "").replace(/\\/g, "\\\\").replace(/"/g, '\\"');
+    }
+
+    function getUploadedImageBackground(number, dataUrl = getUploadedImage(number)) {
+      const storedImage = getStoredUploadedImage(number);
+      if (storedImage) return `url("${escapeCssUrl(storedImage)}")`;
+
+      const staticCandidates = getPortfolioStaticImageCandidates(number);
+      if (staticCandidates.length) {
+        return staticCandidates.map(candidate => `url("${escapeCssUrl(candidate)}")`).join(", ");
+      }
+
+      return dataUrl ? `url("${escapeCssUrl(dataUrl)}")` : "";
     }
 
     function setUploadedImage(number, dataUrl) {
@@ -9472,15 +9563,18 @@ html.photo-lightbox-lock body {
       return false;
     }
 
-    function setLayerBackground(layer, dataUrl) {
+    function setLayerBackground(layer, dataUrl, number) {
       if (!layer) return;
-      layer.style.backgroundImage = dataUrl ? `url("${dataUrl}")` : "";
+      layer.style.backgroundImage = number
+        ? getUploadedImageBackground(number, dataUrl)
+        : (dataUrl ? `url("${escapeCssUrl(dataUrl)}")` : "");
     }
 
-    function applyImageToContainer(container, dataUrl) {
+    function applyImageToContainer(container, dataUrl, number) {
       if (!container) return;
-      container.classList.toggle("has-uploaded-image", Boolean(dataUrl));
-      container.querySelectorAll(".aigc-upload-image-layer").forEach(layer => setLayerBackground(layer, dataUrl));
+      const hasImage = Boolean(dataUrl || (number && getUploadedImage(number)));
+      container.classList.toggle("has-uploaded-image", hasImage);
+      container.querySelectorAll(".aigc-upload-image-layer").forEach(layer => setLayerBackground(layer, dataUrl, number));
 
       const shouldAdaptRatio = container.matches(".aigc-selected-art, .aigc-selected-zoom-content, .aigc-card-detail-preview");
       if (!shouldAdaptRatio) return;
@@ -9515,7 +9609,7 @@ html.photo-lightbox-lock body {
     function applyUploadedImageToCard(number, dataUrl) {
       if (!aigcCollectionGrid) return;
       const card = aigcCollectionGrid.querySelector(`.aigc-css3d-element[data-number="${number}"]`);
-      applyImageToContainer(card, dataUrl);
+      applyImageToContainer(card, dataUrl, number);
     }
 
     function applyUploadedImageToPicker(number, dataUrl) {
@@ -9524,7 +9618,7 @@ html.photo-lightbox-lock body {
       if (!picker) return;
       picker.classList.toggle("has-uploaded-image", Boolean(dataUrl));
       const symbol = picker.querySelector(".aigc-picker-symbol");
-      if (symbol) symbol.style.backgroundImage = dataUrl ? `url("${dataUrl}")` : "";
+      if (symbol) symbol.style.backgroundImage = getUploadedImageBackground(number, dataUrl);
     }
 
     function applyUploadedImageToUploadSlot(number, dataUrl) {
@@ -9533,7 +9627,7 @@ html.photo-lightbox-lock body {
       if (!slot) return;
       slot.classList.toggle("has-uploaded-image", Boolean(dataUrl));
       const thumb = slot.querySelector(".aigc-upload-slot-thumb");
-      if (thumb) thumb.style.backgroundImage = dataUrl ? `url("${dataUrl}")` : "";
+      if (thumb) thumb.style.backgroundImage = getUploadedImageBackground(number, dataUrl);
       const state = slot.querySelector(".aigc-upload-slot-state");
       if (state) state.textContent = dataUrl ? "已上传" : "未上传";
     }
@@ -9541,16 +9635,16 @@ html.photo-lightbox-lock body {
     function applyUploadedImageToSelectedArt(data) {
       const number = (data && data.number) || currentAigcUploadTargetNumber || "01";
       const dataUrl = getUploadedImage(number);
-      applyImageToContainer(aigcSelectedArt, dataUrl);
+      applyImageToContainer(aigcSelectedArt, dataUrl, number);
       if (aigcSelectedZoom && aigcSelectedZoom.content) {
-        applyImageToContainer(aigcSelectedZoom.content, dataUrl);
+        applyImageToContainer(aigcSelectedZoom.content, dataUrl, number);
       }
     }
 
     function applyUploadedImageToDetailPreview(data, preview) {
       if (!preview) return;
       const number = (data && data.number) || "01";
-      applyImageToContainer(preview, getUploadedImage(number));
+      applyImageToContainer(preview, getUploadedImage(number), number);
     }
 
     function applyUploadedImageEverywhere(number) {
@@ -10373,7 +10467,7 @@ html.photo-lightbox-lock body {
           <p></p>
         </figcaption>
       `;
-      applyImageToContainer(aigcSelectedZoom.content, getUploadedImage(data.number));
+      applyImageToContainer(aigcSelectedZoom.content, getUploadedImage(data.number), data.number);
       if (data && data.number) aigcSelectedZoom.content.dataset.selectedNumber = data.number;
     }
 
@@ -10428,7 +10522,7 @@ html.photo-lightbox-lock body {
          Re-apply the uploaded image here as a safety net, otherwise the lens can show only the dotted fallback background. */
       const selectedNumber = aigcSelectedArt.dataset.selectedNumber || (getAigcElementData(aigcSelectedElement).number) || "01";
       if (content.dataset.selectedNumber !== selectedNumber || !content.classList.contains("has-uploaded-image")) {
-        applyImageToContainer(content, getUploadedImage(selectedNumber));
+        applyImageToContainer(content, getUploadedImage(selectedNumber), selectedNumber);
         content.dataset.selectedNumber = selectedNumber;
       }
 
@@ -10624,13 +10718,13 @@ html.photo-lightbox-lock body {
         return `
           <article class="aigc-css3d-element has-uploaded-image" style="--aigc-card-bg: rgba(38, 4, 34, ${alpha}); opacity:0;" data-number="${number}" data-symbol="${escapeHtml(symbol)}" data-title="" data-detail="" data-orientation="${escapeHtml(orientation)}" data-original-index="${record.index}" data-selected="false">
             <div class="aigc-css3d-face aigc-css3d-face-front">
-              <div class="aigc-upload-image-layer" aria-hidden="true" style="background-image:url('${record.uploadedImage}')"></div>
+              <div class="aigc-upload-image-layer" aria-hidden="true" style="background-image:${escapeHtml(getUploadedImageBackground(number, record.uploadedImage))}"></div>
               <div class="aigc-css3d-number">${number}</div>
               <div class="aigc-css3d-symbol">${escapeHtml(symbol)}</div>
               <div class="aigc-css3d-details"></div>
             </div>
             <div class="aigc-css3d-face aigc-css3d-face-back" aria-hidden="true">
-              <div class="aigc-upload-image-layer" aria-hidden="true" style="background-image:url('${record.uploadedImage}')"></div>
+              <div class="aigc-upload-image-layer" aria-hidden="true" style="background-image:${escapeHtml(getUploadedImageBackground(number, record.uploadedImage))}"></div>
               <div class="aigc-css3d-number">${number}</div>
               <div class="aigc-css3d-symbol">${escapeHtml(symbol)}</div>
               <div class="aigc-css3d-details"></div>
@@ -10940,211 +11034,43 @@ html.photo-lightbox-lock body {
         poster: {
           label: "平面",
           hero: "平面主视觉",
-          modules: [
-            ["01", "", ""],
-            ["02", "", ""],
-            ["03", "", ""],
-            ["04", "", ""],
-            ["05", "", ""],
-            ["06", "", ""],
-            ["07", "", ""],
-            ["08", "", ""],
-            ["09", "", ""],
-            ["10", "", ""],
-            ["11", "", ""],
-            ["12", "", ""],
-            ["13", "", ""],
-            ["14", "", ""],
-            ["15", "", ""],
-            ["16", "", ""],
-            ["17", "", ""],
-            ["18", "", ""],
-            ["19", "", ""],
-            ["20", "", ""],
-            ["21", "", ""],
-            ["22", "", ""],
-            ["23", "", ""]
-          ]
+          modules: Array.from({ length: 11 }, (_, index) => [String(index + 1).padStart(2, "0"), "", ""])
         },
         cover: {
           label: "包装",
           hero: "包装主视觉",
-          modules: [
-            ["01", "", ""],
-            ["02", "", ""],
-            ["03", "", ""],
-            ["04", "", ""],
-            ["05", "", ""],
-            ["06", "", ""],
-            ["07", "", ""],
-            ["08", "", ""],
-            ["09", "", ""],
-            ["10", "", ""],
-            ["11", "", ""],
-            ["12", "", ""],
-            ["13", "", ""],
-            ["14", "", ""],
-            ["15", "", ""],
-            ["16", "", ""],
-            ["17", "", ""],
-            ["18", "", ""],
-            ["19", "", ""],
-            ["20", "", ""],
-            ["21", "", ""],
-            ["22", "", ""],
-            ["23", "", ""]
-          ]
+          modules: Array.from({ length: 10 }, (_, index) => [String(index + 1).padStart(2, "0"), "", ""])
         },
         brand: {
           label: "UI",
           hero: "UI主视觉",
-          modules: [
-            ["01", "", ""],
-            ["02", "", ""],
-            ["03", "", ""],
-            ["04", "", ""],
-            ["05", "", ""],
-            ["06", "", ""],
-            ["07", "", ""],
-            ["08", "", ""],
-            ["09", "", ""],
-            ["10", "", ""],
-            ["11", "", ""],
-            ["12", "", ""],
-            ["13", "", ""],
-            ["14", "", ""],
-            ["15", "", ""],
-            ["16", "", ""],
-            ["17", "", ""],
-            ["18", "", ""],
-            ["19", "", ""],
-            ["20", "", ""],
-            ["21", "", ""],
-            ["22", "", ""],
-            ["23", "", ""]
-          ]
+          modules: Array.from({ length: 12 }, (_, index) => [String(index + 1).padStart(2, "0"), "", ""])
         },
         type: {
           label: "物料",
           hero: "物料主视觉",
-          modules: [
-            ["01", "", ""],
-            ["02", "", ""],
-            ["03", "", ""],
-            ["04", "", ""],
-            ["05", "", ""],
-            ["06", "", ""],
-            ["07", "", ""],
-            ["08", "", ""],
-            ["09", "", ""],
-            ["10", "", ""],
-            ["11", "", ""],
-            ["12", "", ""],
-            ["13", "", ""],
-            ["14", "", ""],
-            ["15", "", ""],
-            ["16", "", ""],
-            ["17", "", ""],
-            ["18", "", ""],
-            ["19", "", ""],
-            ["20", "", ""],
-            ["21", "", ""],
-            ["22", "", ""],
-            ["23", "", ""]
-          ]
+          modules: Array.from({ length: 9 }, (_, index) => [String(index + 1).padStart(2, "0"), "", ""])
         },
         ip: {
           label: "IP",
           hero: "IP主视觉",
-          modules: [
-            ["01", "", ""],
-            ["02", "", ""],
-            ["03", "", ""],
-            ["04", "", ""],
-            ["05", "", ""],
-            ["06", "", ""],
-            ["07", "", ""],
-            ["08", "", ""],
-            ["09", "", ""],
-            ["10", "", ""],
-            ["11", "", ""],
-            ["12", "", ""],
-            ["13", "", ""],
-            ["14", "", ""],
-            ["15", "", ""],
-            ["16", "", ""],
-            ["17", "", ""],
-            ["18", "", ""],
-            ["19", "", ""],
-            ["20", "", ""],
-            ["21", "", ""],
-            ["22", "", ""],
-            ["23", "", ""]
-          ]
+          modules: Array.from({ length: 8 }, (_, index) => [String(index + 1).padStart(2, "0"), "", ""])
         },
         wechat: {
           label: "公众号",
           hero: "公众号主视觉",
-          modules: [
-            ["01", "", ""],
-            ["02", "", ""],
-            ["03", "", ""],
-            ["04", "", ""],
-            ["05", "", ""],
-            ["06", "", ""],
-            ["07", "", ""],
-            ["08", "", ""],
-            ["09", "", ""],
-            ["10", "", ""],
-            ["11", "", ""],
-            ["12", "", ""],
-            ["13", "", ""],
-            ["14", "", ""],
-            ["15", "", ""],
-            ["16", "", ""],
-            ["17", "", ""],
-            ["18", "", ""],
-            ["19", "", ""],
-            ["20", "", ""],
-            ["21", "", ""],
-            ["22", "", ""],
-            ["23", "", ""]
-          ]
+          modules: Array.from({ length: 6 }, (_, index) => [String(index + 1).padStart(2, "0"), "", ""])
         }
       };
 
       const fallback = {
         label: "作品",
         hero: "作品主视觉",
-        modules: [
-          ["01", "", ""],
-          ["02", "", ""],
-          ["03", "", ""],
-          ["04", "", ""],
-          ["05", "", ""],
-          ["06", "", ""],
-          ["07", "", ""],
-          ["08", "", ""],
-          ["09", "", ""],
-          ["10", "", ""],
-          ["11", "", ""],
-          ["12", "", ""],
-          ["13", "", ""],
-          ["14", "", ""],
-          ["15", "", ""],
-          ["16", "", ""],
-          ["17", "", ""],
-          ["18", "", ""],
-          ["19", "", ""],
-          ["20", "", ""],
-          ["21", "", ""],
-          ["22", "", ""],
-          ["23", "", ""]
-        ]
+        modules: Array.from({ length: 12 }, (_, index) => [String(index + 1).padStart(2, "0"), "", ""])
       };
 
       const config = categoryCollections[category] || fallback;
-      const modules = [[initials, "", ""], ...config.modules];
+      const modules = config.modules;
 
       return {
         title: `${config.label}作品合集`,
@@ -11706,6 +11632,7 @@ html.photo-lightbox-lock body {
     copyPhoneBtn.addEventListener("click", copyPhone);
   })();
 </script>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"45c2bf8136a245cd97f1c2e9a96c0730","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
 <script defer src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"45c2bf8136a245cd97f1c2e9a96c0730","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
 <script defer src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"45c2bf8136a245cd97f1c2e9a96c0730","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
 </body>
