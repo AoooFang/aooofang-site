@@ -8685,8 +8685,8 @@ body.contact-modal-open {
       </div>
       <div class="aigc-work-auto-hint" id="aigcWorkAutoHint" aria-hidden="true">拖拽暂停&nbsp;&nbsp;鼠标滚轮可缩放视图&nbsp;&nbsp;1秒后自动滚动</div>
       <div class="aigc-collection-menu" aria-label="作品合集展示模式切换">
-        <button class="aigc-view-btn" type="button" data-aigc-view="table">表格</button>
-        <button class="aigc-view-btn active" type="button" data-aigc-view="sphere">球型</button>
+        <button class="aigc-view-btn active" type="button" data-aigc-view="table">表格</button>
+        <button class="aigc-view-btn" type="button" data-aigc-view="sphere">球型</button>
         <button class="aigc-view-btn" type="button" data-aigc-view="single">单张</button>
       </div>
     </div>
@@ -8980,7 +8980,7 @@ body.contact-modal-open {
 
     let selectedCollectionKey = "ppt";
     let aigcCss3dObjects = [];
-    let activeAigcView = "sphere";
+    let activeAigcView = "table";
     let lastAigcTrigger = showcase;
 
     const aigcCss3dStage = document.getElementById("aigcCss3dStage");
@@ -9873,7 +9873,7 @@ body.contact-modal-open {
 
     function transformAigcView(mode = "table", duration = 1800) {
       const previousView = activeAigcView;
-      activeAigcView = mode || "sphere";
+      activeAigcView = mode || "table";
       if (activeAigcView === "single" && previousView !== "single") {
         aigcViewerState.rotateX = 0;
         aigcViewerState.scale = 1;
@@ -10276,9 +10276,9 @@ body.contact-modal-open {
         renderAigcUploadAdminSlots(items, collection);
         applyCurrentCollectionUploads();
         updateAigcUploadAdminSelection(requestedUploadNumber);
-        activeAigcView = "sphere";
-        if (aigcCollectionCard) aigcCollectionCard.dataset.aigcView = "sphere";
-        aigcViewButtons.forEach(button => button.classList.toggle("active", button.dataset.aigcView === "sphere"));
+        activeAigcView = "table";
+        if (aigcCollectionCard) aigcCollectionCard.dataset.aigcView = "table";
+        aigcViewButtons.forEach(button => button.classList.toggle("active", button.dataset.aigcView === "table"));
         updateAigcWorldTransform();
         return;
       }
@@ -10337,7 +10337,7 @@ body.contact-modal-open {
       aigcCss3dObjects.forEach(element => {
         element.style.transform = `translate3d(${Math.random() * 3600 - 1800}px, ${Math.random() * 2800 - 1400}px, ${Math.random() * 3600 - 1800}px)`;
       });
-      const initialAigcView = visibleRecords.length === 1 ? "single" : "sphere";
+      const initialAigcView = "table";
       aigcViewerState.rotateX = initialAigcView === "single" ? 0 : -8;
       aigcViewerState.rotateY = 0;
       aigcViewerState.scale = 1;
@@ -11309,6 +11309,7 @@ body.contact-modal-open {
   })();
 </script>
 
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"45c2bf8136a245cd97f1c2e9a96c0730","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
 <script defer src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"45c2bf8136a245cd97f1c2e9a96c0730","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
 <script defer src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"45c2bf8136a245cd97f1c2e9a96c0730","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
 <script defer src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"45c2bf8136a245cd97f1c2e9a96c0730","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
