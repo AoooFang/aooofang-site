@@ -8237,7 +8237,26 @@ button.contact-link {
 
 .contact-email-panel.show {
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: 1fr;
+}
+
+.contact-info-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+}
+
+.contact-info-row + .contact-info-row {
+  padding-top: 12px;
+  border-top: 1px solid rgba(255,255,255,.1);
+}
+
+.contact-info-label {
+  color: rgba(255,255,255,.58);
+  font-size: 13px;
+  font-weight: 900;
+  white-space: nowrap;
 }
 
 .contact-email-value {
@@ -8310,7 +8329,8 @@ body.contact-modal-open {
     border-radius: 24px;
   }
 
-  .contact-email-panel.show {
+  .contact-email-panel.show,
+  .contact-info-row {
     grid-template-columns: 1fr;
   }
 
@@ -8326,6 +8346,271 @@ body.contact-modal-open {
   .contact-qr-image {
     max-height: 70svh;
     border-radius: 14px;
+  }
+}
+
+
+
+/* ===== Final patch: photo magnifier stability + mobile viewport parity ===== */
+html.photo-lightbox-lock,
+html.photo-lightbox-lock body {
+  overflow: hidden !important;
+  overscroll-behavior: none !important;
+}
+
+html.photo-lightbox-lock body {
+  position: fixed !important;
+  left: 0 !important;
+  right: 0 !important;
+  width: 100% !important;
+}
+
+.photo-lightbox {
+  padding: max(18px, env(safe-area-inset-top)) max(18px, env(safe-area-inset-right)) max(18px, env(safe-area-inset-bottom)) max(18px, env(safe-area-inset-left));
+  overflow: hidden;
+  overscroll-behavior: contain;
+  touch-action: none;
+}
+
+.photo-lightbox-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  max-width: min(580px, calc(100vw - 36px));
+  max-height: calc(100dvh - 36px);
+  overflow: visible;
+  isolation: isolate;
+}
+
+@supports not (height: 100dvh) {
+  .photo-lightbox-card {
+    max-height: calc(100svh - 36px);
+  }
+}
+
+.photo-lightbox-card img,
+.photo-lightbox-card #photoLightboxImage {
+  width: auto !important;
+  height: auto !important;
+  max-width: min(548px, calc(100vw - 60px));
+  max-height: calc(100dvh - 72px);
+  object-fit: contain;
+  touch-action: none;
+}
+
+@supports not (height: 100dvh) {
+  .photo-lightbox-card img,
+  .photo-lightbox-card #photoLightboxImage {
+    max-height: calc(100svh - 72px);
+  }
+}
+
+.photo-zoom-toggle {
+  left: 14px !important;
+  top: 14px !important;
+  right: auto !important;
+  bottom: auto !important;
+  z-index: 8;
+}
+
+.photo-lightbox-close {
+  z-index: 9;
+}
+
+.photo-zoom-lens {
+  width: clamp(230px, 34vw, 340px);
+  height: clamp(320px, 58vh, 500px);
+  max-width: calc(100vw - 32px);
+  max-height: calc(100dvh - 32px);
+  will-change: left, top, background-position, background-size;
+  contain: layout paint;
+  touch-action: none;
+}
+
+@supports not (height: 100dvh) {
+  .photo-zoom-lens {
+    max-height: calc(100svh - 32px);
+  }
+}
+
+.photo-lightbox-card.zoom-active .photo-zoom-hint {
+  opacity: .96;
+}
+
+@media (hover: none) {
+  .profile-photo-float:hover,
+  .work-card:hover,
+  .primary-btn:hover,
+  .secondary-btn:hover {
+    transform: none;
+  }
+}
+
+@media (max-width: 860px) {
+  html,
+  body {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: clip;
+  }
+
+  .nav {
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+    max-width: calc(100vw - 20px);
+  }
+
+  .hero,
+  .hero-stage-wrap,
+  section,
+  footer,
+  .modal,
+  .photo-lightbox,
+  .aigc-collection-modal,
+  .aigc-card-lightbox {
+    max-width: 100vw;
+  }
+
+  .intro-card h2 .hero-subline {
+    white-space: normal;
+  }
+
+  .filters,
+  .aigc-selected-strip {
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .filters::-webkit-scrollbar,
+  .aigc-selected-strip::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@media (max-width: 720px) {
+  .photo-lightbox {
+    padding: max(10px, env(safe-area-inset-top)) max(10px, env(safe-area-inset-right)) max(10px, env(safe-area-inset-bottom)) max(10px, env(safe-area-inset-left));
+  }
+
+  .photo-lightbox-card {
+    max-width: calc(100vw - 20px);
+    max-height: calc(100dvh - 20px);
+    padding: 8px;
+    border-radius: 22px;
+  }
+
+  .photo-lightbox-card img,
+  .photo-lightbox-card #photoLightboxImage {
+    max-width: calc(100vw - 36px);
+    max-height: calc(100dvh - 36px);
+    border-radius: 16px;
+  }
+
+  .photo-zoom-toggle {
+    left: 10px !important;
+    top: 10px !important;
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+  }
+
+  .photo-lightbox-close {
+    right: 10px;
+    top: 10px;
+    width: 40px;
+    height: 40px;
+    background: rgba(0,0,0,.55);
+  }
+
+  .photo-zoom-lens {
+    width: min(68vw, 260px);
+    height: min(56vh, 350px);
+    border-radius: 21px;
+    border-width: 1.5px;
+    box-shadow:
+      0 20px 48px rgba(0,0,0,.58),
+      0 0 0 4px rgba(255,255,255,.07),
+      0 0 32px rgba(255,58,168,.28);
+  }
+
+  .photo-zoom-hint {
+    left: 50%;
+    bottom: 12px;
+    max-width: calc(100vw - 72px);
+    padding: 8px 11px;
+    font-size: 11px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+@media (max-width: 430px) {
+  .photo-lightbox-card {
+    max-width: calc(100vw - 16px);
+    max-height: calc(100dvh - 16px);
+    padding: 6px;
+    border-radius: 20px;
+  }
+
+  .photo-lightbox-card img,
+  .photo-lightbox-card #photoLightboxImage {
+    max-width: calc(100vw - 28px);
+    max-height: calc(100dvh - 28px);
+  }
+
+  .photo-zoom-lens {
+    width: min(72vw, 248px);
+    height: min(52vh, 330px);
+  }
+}
+
+
+
+/* ===== Final patch V3: AIGC selected-work magnifier image sync + smarter placement ===== */
+.aigc-selected-art .aigc-selected-zoom-lens {
+  pointer-events: none !important;
+  max-width: calc(100vw - 28px);
+  max-height: calc(100dvh - 28px);
+  will-change: left, top, opacity, visibility;
+  contain: layout paint;
+}
+
+@supports not (height: 100dvh) {
+  .aigc-selected-art .aigc-selected-zoom-lens {
+    max-height: calc(100svh - 28px);
+  }
+}
+
+.aigc-selected-zoom-content.has-uploaded-image .aigc-upload-image-layer {
+  opacity: 1 !important;
+  background-size: contain !important;
+  background-position: center center !important;
+  background-repeat: no-repeat !important;
+  background-color: transparent !important;
+  filter: saturate(1.04) contrast(1.02);
+}
+
+.aigc-selected-zoom-content.has-uploaded-image .aigc-selected-art-bg,
+.aigc-selected-zoom-content.has-uploaded-image .aigc-selected-art-symbol,
+.aigc-selected-zoom-content.has-uploaded-image .aigc-selected-caption {
+  opacity: 0 !important;
+}
+
+.aigc-selected-zoom-content.has-uploaded-image::before {
+  opacity: 0 !important;
+}
+
+.aigc-selected-zoom-content.has-uploaded-image::after {
+  opacity: .14 !important;
+}
+
+@media (max-width: 860px), (pointer: coarse) {
+  .aigc-selected-art .aigc-selected-zoom-lens {
+    width: min(66vw, 270px) !important;
+    height: min(52vh, 360px) !important;
+    border-radius: 22px !important;
   }
 }
 
@@ -8630,11 +8915,11 @@ body.contact-modal-open {
       <div>
         <span class="eyebrow">Let’s Work</span>
         <h2>一起做点<br>更炸的视觉</h2>
-        <p>点击邮箱可查看并一键复制邮箱地址；点击微信或飞书即可弹出对应二维码。</p>
+        <p>点击邮箱 / 手机号可查看并一键复制邮箱地址或手机号；点击微信或飞书即可弹出对应二维码。</p>
       </div>
 
       <div class="contact-actions" aria-label="联系方式">
-        <button class="contact-link contact-trigger" type="button" data-contact="email">邮箱 / E-mail</button>
+        <button class="contact-link contact-trigger" type="button" data-contact="email">邮箱 / 手机号</button>
         <button class="contact-link contact-trigger" type="button" data-contact="wechat">微信 / WeChat</button>
         <button class="contact-link contact-trigger" type="button" data-contact="lark">飞书 / Lark</button>
       </div>
@@ -8649,8 +8934,16 @@ body.contact-modal-open {
       <p class="contact-modal-desc" id="contactModalDesc"></p>
 
       <div class="contact-email-panel" id="contactEmailPanel">
-        <div class="contact-email-value" id="contactEmailValue"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="6a5b5e5d5b5a585a5a5a5b2a1b1b44090507">[email&#160;protected]</a></div>
-        <button class="contact-copy-btn" type="button" id="contactCopyBtn">复制邮箱</button>
+        <div class="contact-info-row">
+          <span class="contact-info-label">邮箱</span>
+          <div class="contact-email-value" id="contactEmailValue"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="bd8c898a8c8d8f8d8d8d8cfdcccc93ded2d0">[email&#160;protected]</a></div>
+          <button class="contact-copy-btn" type="button" id="contactCopyEmailBtn">复制邮箱</button>
+        </div>
+        <div class="contact-info-row">
+          <span class="contact-info-label">手机号</span>
+          <div class="contact-email-value" id="contactPhoneValue">15306088800</div>
+          <button class="contact-copy-btn" type="button" id="contactCopyPhoneBtn">复制手机号</button>
+        </div>
       </div>
 
       <div class="contact-qr-panel" id="contactQrPanel">
@@ -8793,7 +9086,7 @@ body.contact-modal-open {
     </div>
   </div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js">
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js">
     
     
 
@@ -10080,6 +10373,8 @@ body.contact-modal-open {
           <p></p>
         </figcaption>
       `;
+      applyImageToContainer(aigcSelectedZoom.content, getUploadedImage(data.number));
+      if (data && data.number) aigcSelectedZoom.content.dataset.selectedNumber = data.number;
     }
 
     function hideAigcSelectedZoomLens() {
@@ -10098,6 +10393,7 @@ body.contact-modal-open {
       }
 
       renderAigcSelectedZoomContent();
+      applyUploadedImageToSelectedArt(getAigcElementData(aigcSelectedElement));
       hideAigcSelectedZoomLens();
 
       if (!aigcSelectedZoom.enabled) {
@@ -10117,7 +10413,7 @@ body.contact-modal-open {
       if (!aigcSelectedZoom.enabled || !aigcSelectedArt) return;
       const lens = ensureAigcSelectedZoomLens();
       const content = aigcSelectedZoom.content;
-      if (!lens || !content) return;
+      if (!lens || !content || !event || typeof event.clientX !== "number" || typeof event.clientY !== "number") return;
 
       const artRect = aigcSelectedArt.getBoundingClientRect();
       const pointerX = event.clientX - artRect.left;
@@ -10128,16 +10424,53 @@ body.contact-modal-open {
         return;
       }
 
-      aigcSelectedZoom.lastEvent = event;
-      const lensWidth = lens.offsetWidth;
-      const lensHeight = lens.offsetHeight;
-      const lensLeft = pointerX - lensWidth / 2;
-      const lensTop = pointerY - lensHeight / 2;
+      /* The zoom content is rebuilt when magnifier mode is toggled.
+         Re-apply the uploaded image here as a safety net, otherwise the lens can show only the dotted fallback background. */
+      const selectedNumber = aigcSelectedArt.dataset.selectedNumber || (getAigcElementData(aigcSelectedElement).number) || "01";
+      if (content.dataset.selectedNumber !== selectedNumber || !content.classList.contains("has-uploaded-image")) {
+        applyImageToContainer(content, getUploadedImage(selectedNumber));
+        content.dataset.selectedNumber = selectedNumber;
+      }
+
+      aigcSelectedZoom.lastEvent = { clientX: event.clientX, clientY: event.clientY };
+      const lensWidth = lens.offsetWidth || 300;
+      const lensHeight = lens.offsetHeight || 390;
+      const gap = 18;
+      const viewportGap = 12;
+      const mobileLike = window.matchMedia && window.matchMedia("(pointer: coarse), (max-width: 860px)").matches;
+
+      let lensLeft;
+      let lensTop;
+
+      if (mobileLike) {
+        lensLeft = pointerX - lensWidth / 2;
+        lensTop = pointerY - lensHeight - gap;
+        if (artRect.top + lensTop < viewportGap) {
+          lensTop = pointerY + gap;
+        }
+      } else {
+        lensLeft = pointerX + gap;
+        lensTop = pointerY - lensHeight / 2;
+        if (artRect.left + lensLeft + lensWidth > window.innerWidth - viewportGap) {
+          lensLeft = pointerX - lensWidth - gap;
+        }
+      }
+
+      const minLeft = viewportGap - artRect.left;
+      const maxLeft = window.innerWidth - viewportGap - artRect.left - lensWidth;
+      const minTop = viewportGap - artRect.top;
+      const maxTop = window.innerHeight - viewportGap - artRect.top - lensHeight;
+
+      lensLeft = Math.max(minLeft, Math.min(lensLeft, Math.max(minLeft, maxLeft)));
+      lensTop = Math.max(minTop, Math.min(lensTop, Math.max(minTop, maxTop)));
 
       lens.style.left = `${lensLeft}px`;
       lens.style.top = `${lensTop}px`;
+
       content.style.width = `${artRect.width}px`;
       content.style.height = `${artRect.height}px`;
+
+      /* Keep the cursor target in the center of the magnifier, even when the lens is smart-offset beside the mouse. */
       content.style.transform = `translate(${lensWidth / 2 - pointerX * aigcSelectedZoom.scale}px, ${lensHeight / 2 - pointerY * aigcSelectedZoom.scale}px) scale(${aigcSelectedZoom.scale})`;
       lens.classList.add("visible");
     }
@@ -10877,9 +11210,9 @@ body.contact-modal-open {
     }, true);
 
   </script>
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v833ccba57c9e4d2798f2e76cebdd09a11778172276447" integrity="sha512-57MDmcccJXYtNnH+ZiBwzC4jb2rvgVCEokYN+L/nLlmO8rfYT/gIpW2A569iJ/3b+0UEasghjuZH/ma3wIs/EQ==" data-cf-beacon='{"version":"2024.11.0","token":"45c2bf8136a245cd97f1c2e9a96c0730","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
 
 <script>
+  /* ===== Final patch: personal photo lightbox / magnifier, mouse + touch ===== */
   (function () {
     const photoTrigger = document.querySelector(".profile-photo-float");
     const photoLightbox = document.getElementById("photoLightbox");
@@ -10888,6 +11221,7 @@ body.contact-modal-open {
     const closePhotoLightbox = document.getElementById("closePhotoLightbox");
     const photoZoomToggle = document.getElementById("photoZoomToggle");
     const photoZoomLens = document.getElementById("photoZoomLens");
+    const isCoarsePointer = window.matchMedia ? window.matchMedia("(pointer: coarse), (max-width: 860px)") : null;
 
     if (
       !photoTrigger ||
@@ -10899,23 +11233,46 @@ body.contact-modal-open {
       !photoZoomLens
     ) return;
 
-    const defaultZoomScale = 1.5;
-    const minZoomScale = 1.5;
+    const defaultZoomScale = 2.05;
+    const minZoomScale = 1.35;
     const maxZoomScale = 6;
     const zoomStep = 0.25;
+    const viewportGap = 10;
+
     let zoomScale = defaultZoomScale;
     let zoomEnabled = false;
+    let lastTrigger = null;
+    let lastPoint = null;
+    let lastScrollY = 0;
+    let startPoint = null;
+    let movedDuringPointer = false;
+    let rafId = 0;
+
+    function clamp(value, min, max) {
+      return Math.max(min, Math.min(max, value));
+    }
+
+    function getClientPoint(event) {
+      if (!event) return null;
+      if (typeof event.clientX === "number" && typeof event.clientY === "number") {
+        return { x: event.clientX, y: event.clientY };
+      }
+      const touch = event.touches && event.touches[0] ? event.touches[0] : (event.changedTouches && event.changedTouches[0]);
+      if (touch) return { x: touch.clientX, y: touch.clientY };
+      return null;
+    }
 
     function setZoomEnabled(enabled) {
-      zoomEnabled = enabled;
-      photoLightboxCard.classList.toggle("zoom-active", enabled);
-      photoZoomToggle.setAttribute("aria-pressed", String(enabled));
-      photoZoomToggle.setAttribute("aria-label", enabled ? "关闭局部放大" : "开启局部放大");
-      photoZoomToggle.title = enabled ? "关闭局部放大" : "局部放大";
-      photoZoomLens.classList.remove("visible");
+      zoomEnabled = Boolean(enabled);
+      photoLightboxCard.classList.toggle("zoom-active", zoomEnabled);
+      photoZoomToggle.setAttribute("aria-pressed", String(zoomEnabled));
+      photoZoomToggle.setAttribute("aria-label", zoomEnabled ? "关闭局部放大" : "开启局部放大");
+      photoZoomToggle.title = zoomEnabled ? "关闭局部放大" : "局部放大";
 
-      if (!enabled) {
+      if (!zoomEnabled) {
         zoomScale = defaultZoomScale;
+        lastPoint = null;
+        photoZoomLens.classList.remove("visible");
         photoZoomLens.style.removeProperty("left");
         photoZoomLens.style.removeProperty("top");
         photoZoomLens.style.removeProperty("background-position");
@@ -10923,36 +11280,55 @@ body.contact-modal-open {
       }
     }
 
-    function openPhotoLightbox() {
+    function lockPageScroll() {
+      lastScrollY = window.scrollY || document.documentElement.scrollTop || 0;
+      document.documentElement.classList.add("photo-lightbox-lock");
+      document.body.style.top = `-${lastScrollY}px`;
+    }
+
+    function unlockPageScroll() {
+      document.documentElement.classList.remove("photo-lightbox-lock");
+      document.body.style.top = "";
+      window.scrollTo(0, lastScrollY || 0);
+    }
+
+    function openPhotoLightbox(event) {
       const img = photoTrigger.querySelector("img");
       if (!img) return;
-      photoLightboxImage.src = img.src;
+
+      lastTrigger = event && event.currentTarget ? event.currentTarget : photoTrigger;
+      photoLightboxImage.src = img.currentSrc || img.src;
       photoLightboxImage.alt = img.alt || "个人照片放大预览";
-      photoLightboxImage.title = "单击开启 / 关闭放大镜";
-      photoZoomLens.style.backgroundImage = `url("${img.src}")`;
+      photoLightboxImage.title = "单击开启 / 关闭放大镜；拖动可查看局部细节";
+      photoZoomLens.style.backgroundImage = `url("${String(img.currentSrc || img.src).replace(/"/g, '\\"')}")`;
+
       setZoomEnabled(false);
       photoLightbox.classList.add("open");
-      document.body.style.overflow = "hidden";
-      closePhotoLightbox.focus();
+      photoLightbox.setAttribute("aria-hidden", "false");
+      lockPageScroll();
+      requestAnimationFrame(() => closePhotoLightbox.focus({ preventScroll: true }));
     }
 
     function closePhotoLightboxFn() {
       setZoomEnabled(false);
       photoLightbox.classList.remove("open");
+      photoLightbox.setAttribute("aria-hidden", "true");
       photoLightboxImage.removeAttribute("src");
       photoLightboxImage.removeAttribute("title");
       photoZoomLens.style.removeProperty("background-image");
-      document.body.style.overflow = "";
-      photoTrigger.focus();
+      unlockPageScroll();
+      if (lastTrigger && typeof lastTrigger.focus === "function") {
+        lastTrigger.focus({ preventScroll: true });
+      }
     }
 
-    function updateZoomLens(event) {
-      if (!zoomEnabled) return;
+    function updateZoomLensFromPoint(point) {
+      if (!zoomEnabled || !point) return;
 
       const imageRect = photoLightboxImage.getBoundingClientRect();
       const cardRect = photoLightboxCard.getBoundingClientRect();
-      const pointerX = event.clientX - imageRect.left;
-      const pointerY = event.clientY - imageRect.top;
+      const pointerX = point.x - imageRect.left;
+      const pointerY = point.y - imageRect.top;
 
       if (
         pointerX < 0 ||
@@ -10964,83 +11340,152 @@ body.contact-modal-open {
         return;
       }
 
-      const lensWidth = photoZoomLens.offsetWidth;
-      const lensHeight = photoZoomLens.offsetHeight;
-      const lensLeft = imageRect.left - cardRect.left + pointerX - lensWidth / 2;
-      const lensTop = imageRect.top - cardRect.top + pointerY - lensHeight / 2;
+      const lensWidth = photoZoomLens.offsetWidth || 260;
+      const lensHeight = photoZoomLens.offsetHeight || 360;
+      const mobileLike = isCoarsePointer ? isCoarsePointer.matches : false;
+
+      let lensLeft = imageRect.left - cardRect.left + pointerX - lensWidth / 2;
+      let lensTop = imageRect.top - cardRect.top + pointerY - lensHeight / 2;
+
+      if (mobileLike) {
+        lensTop = imageRect.top - cardRect.top + pointerY - lensHeight - 24;
+        if (cardRect.top + lensTop < viewportGap) {
+          lensTop = imageRect.top - cardRect.top + pointerY + 24;
+        }
+      }
+
+      const minLeft = viewportGap - cardRect.left;
+      const maxLeft = window.innerWidth - viewportGap - cardRect.left - lensWidth;
+      const minTop = viewportGap - cardRect.top;
+      const maxTop = window.innerHeight - viewportGap - cardRect.top - lensHeight;
+
+      lensLeft = clamp(lensLeft, minLeft, Math.max(minLeft, maxLeft));
+      lensTop = clamp(lensTop, minTop, Math.max(minTop, maxTop));
 
       photoZoomLens.style.left = `${lensLeft}px`;
       photoZoomLens.style.top = `${lensTop}px`;
-      photoZoomLens.style.backgroundSize =
-        `${imageRect.width * zoomScale}px ${imageRect.height * zoomScale}px`;
-      photoZoomLens.style.backgroundPosition =
-        `${lensWidth / 2 - pointerX * zoomScale}px ${lensHeight / 2 - pointerY * zoomScale}px`;
+      photoZoomLens.style.backgroundSize = `${imageRect.width * zoomScale}px ${imageRect.height * zoomScale}px`;
+      photoZoomLens.style.backgroundPosition = `${lensWidth / 2 - pointerX * zoomScale}px ${lensHeight / 2 - pointerY * zoomScale}px`;
       photoZoomLens.classList.add("visible");
+    }
+
+    function scheduleZoomUpdate(event) {
+      const point = getClientPoint(event);
+      if (!point) return;
+      lastPoint = point;
+      if (rafId) return;
+      rafId = requestAnimationFrame(() => {
+        rafId = 0;
+        updateZoomLensFromPoint(lastPoint);
+      });
     }
 
     photoTrigger.addEventListener("click", openPhotoLightbox);
 
-    photoTrigger.addEventListener("keydown", function (e) {
-      if (e.key === "Enter" || e.key === " ") {
-        e.preventDefault();
-        openPhotoLightbox();
+    photoTrigger.addEventListener("keydown", function (event) {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        openPhotoLightbox(event);
       }
     });
 
     photoZoomToggle.addEventListener("click", function (event) {
-      event.stopPropagation();
-      setZoomEnabled(!zoomEnabled);
-    });
-
-    photoLightboxImage.addEventListener("click", function (event) {
-      event.stopPropagation();
-      const nextZoomState = !zoomEnabled;
-      setZoomEnabled(nextZoomState);
-      if (nextZoomState) updateZoomLens(event);
-    });
-
-    photoLightboxImage.addEventListener("mousemove", updateZoomLens);
-
-    photoLightboxImage.addEventListener("wheel", function (event) {
-      if (!zoomEnabled) return;
-
       event.preventDefault();
+      event.stopPropagation();
+      const nextState = !zoomEnabled;
+      setZoomEnabled(nextState);
+      if (nextState && lastPoint) updateZoomLensFromPoint(lastPoint);
+    });
 
-      const direction = event.deltaY < 0 ? 1 : -1;
-      zoomScale = Math.min(
-        maxZoomScale,
-        Math.max(minZoomScale, zoomScale + direction * zoomStep)
-      );
-
-      updateZoomLens(event);
+    photoLightboxImage.addEventListener("pointerdown", function (event) {
+      startPoint = getClientPoint(event);
+      movedDuringPointer = false;
+      if (zoomEnabled) {
+        event.preventDefault();
+        scheduleZoomUpdate(event);
+      }
     }, { passive: false });
 
-    photoLightboxImage.addEventListener("mouseleave", function () {
+    photoLightboxImage.addEventListener("pointermove", function (event) {
+      const point = getClientPoint(event);
+      if (startPoint && point) {
+        const dx = point.x - startPoint.x;
+        const dy = point.y - startPoint.y;
+        if (Math.hypot(dx, dy) > 8) movedDuringPointer = true;
+      }
+
+      if (!zoomEnabled) return;
+      event.preventDefault();
+      scheduleZoomUpdate(event);
+    }, { passive: false });
+
+    photoLightboxImage.addEventListener("pointerup", function () {
+      startPoint = null;
+      window.setTimeout(() => {
+        movedDuringPointer = false;
+      }, 0);
+    });
+
+    photoLightboxImage.addEventListener("pointercancel", function () {
+      startPoint = null;
+      movedDuringPointer = false;
       photoZoomLens.classList.remove("visible");
     });
 
-    closePhotoLightbox.addEventListener("click", closePhotoLightboxFn);
+    photoLightboxImage.addEventListener("click", function (event) {
+      event.preventDefault();
+      event.stopPropagation();
+      if (movedDuringPointer) return;
 
-    photoLightbox.addEventListener("click", function (e) {
-      if (e.target === photoLightbox) closePhotoLightboxFn();
+      const nextZoomState = !zoomEnabled;
+      setZoomEnabled(nextZoomState);
+      if (nextZoomState) {
+        const point = getClientPoint(event) || {
+          x: photoLightboxImage.getBoundingClientRect().left + photoLightboxImage.getBoundingClientRect().width / 2,
+          y: photoLightboxImage.getBoundingClientRect().top + photoLightboxImage.getBoundingClientRect().height / 2
+        };
+        lastPoint = point;
+        updateZoomLensFromPoint(point);
+      }
     });
 
-    window.addEventListener("keydown", function (e) {
-      if (e.key === "Escape" && photoLightbox.classList.contains("open")) {
+    photoLightboxImage.addEventListener("wheel", function (event) {
+      if (!zoomEnabled) return;
+      event.preventDefault();
+
+      const direction = event.deltaY < 0 ? 1 : -1;
+      zoomScale = clamp(zoomScale + direction * zoomStep, minZoomScale, maxZoomScale);
+      scheduleZoomUpdate(event);
+    }, { passive: false });
+
+    photoLightboxImage.addEventListener("mouseleave", function () {
+      if (!(isCoarsePointer && isCoarsePointer.matches)) {
+        photoZoomLens.classList.remove("visible");
+      }
+    });
+
+    closePhotoLightbox.addEventListener("click", function (event) {
+      event.preventDefault();
+      closePhotoLightboxFn();
+    });
+
+    photoLightbox.addEventListener("click", function (event) {
+      if (event.target === photoLightbox) closePhotoLightboxFn();
+    });
+
+    window.addEventListener("keydown", function (event) {
+      if (event.key === "Escape" && photoLightbox.classList.contains("open")) {
         closePhotoLightboxFn();
       }
     });
+
+    window.addEventListener("resize", function () {
+      if (!photoLightbox.classList.contains("open")) return;
+      photoZoomLens.classList.remove("visible");
+      if (zoomEnabled && lastPoint) updateZoomLensFromPoint(lastPoint);
+    });
   })();
 </script>
-
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v833ccba57c9e4d2798f2e76cebdd09a11778172276447" integrity="sha512-57MDmcccJXYtNnH+ZiBwzC4jb2rvgVCEokYN+L/nLlmO8rfYT/gIpW2A569iJ/3b+0UEasghjuZH/ma3wIs/EQ==" data-cf-beacon='{"version":"2024.11.0","token":"45c2bf8136a245cd97f1c2e9a96c0730","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v833ccba57c9e4d2798f2e76cebdd09a11778172276447" integrity="sha512-57MDmcccJXYtNnH+ZiBwzC4jb2rvgVCEokYN+L/nLlmO8rfYT/gIpW2A569iJ/3b+0UEasghjuZH/ma3wIs/EQ==" data-cf-beacon='{"version":"2024.11.0","token":"45c2bf8136a245cd97f1c2e9a96c0730","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v833ccba57c9e4d2798f2e76cebdd09a11778172276447" integrity="sha512-57MDmcccJXYtNnH+ZiBwzC4jb2rvgVCEokYN+L/nLlmO8rfYT/gIpW2A569iJ/3b+0UEasghjuZH/ma3wIs/EQ==" data-cf-beacon='{"version":"2024.11.0","token":"45c2bf8136a245cd97f1c2e9a96c0730","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v833ccba57c9e4d2798f2e76cebdd09a11778172276447" integrity="sha512-57MDmcccJXYtNnH+ZiBwzC4jb2rvgVCEokYN+L/nLlmO8rfYT/gIpW2A569iJ/3b+0UEasghjuZH/ma3wIs/EQ==" data-cf-beacon='{"version":"2024.11.0","token":"45c2bf8136a245cd97f1c2e9a96c0730","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v833ccba57c9e4d2798f2e76cebdd09a11778172276447" integrity="sha512-57MDmcccJXYtNnH+ZiBwzC4jb2rvgVCEokYN+L/nLlmO8rfYT/gIpW2A569iJ/3b+0UEasghjuZH/ma3wIs/EQ==" data-cf-beacon='{"version":"2024.11.0","token":"45c2bf8136a245cd97f1c2e9a96c0730","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v833ccba57c9e4d2798f2e76cebdd09a11778172276447" integrity="sha512-57MDmcccJXYtNnH+ZiBwzC4jb2rvgVCEokYN+L/nLlmO8rfYT/gIpW2A569iJ/3b+0UEasghjuZH/ma3wIs/EQ==" data-cf-beacon='{"version":"2024.11.0","token":"45c2bf8136a245cd97f1c2e9a96c0730","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v833ccba57c9e4d2798f2e76cebdd09a11778172276447" integrity="sha512-57MDmcccJXYtNnH+ZiBwzC4jb2rvgVCEokYN+L/nLlmO8rfYT/gIpW2A569iJ/3b+0UEasghjuZH/ma3wIs/EQ==" data-cf-beacon='{"version":"2024.11.0","token":"45c2bf8136a245cd97f1c2e9a96c0730","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v833ccba57c9e4d2798f2e76cebdd09a11778172276447" integrity="sha512-57MDmcccJXYtNnH+ZiBwzC4jb2rvgVCEokYN+L/nLlmO8rfYT/gIpW2A569iJ/3b+0UEasghjuZH/ma3wIs/EQ==" data-cf-beacon='{"version":"2024.11.0","token":"45c2bf8136a245cd97f1c2e9a96c0730","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
 
 <script>
   (function () {
@@ -11065,10 +11510,6 @@ body.contact-modal-open {
   })();
 </script>
 
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v833ccba57c9e4d2798f2e76cebdd09a11778172276447" integrity="sha512-57MDmcccJXYtNnH+ZiBwzC4jb2rvgVCEokYN+L/nLlmO8rfYT/gIpW2A569iJ/3b+0UEasghjuZH/ma3wIs/EQ==" data-cf-beacon='{"version":"2024.11.0","token":"45c2bf8136a245cd97f1c2e9a96c0730","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v833ccba57c9e4d2798f2e76cebdd09a11778172276447" integrity="sha512-57MDmcccJXYtNnH+ZiBwzC4jb2rvgVCEokYN+L/nLlmO8rfYT/gIpW2A569iJ/3b+0UEasghjuZH/ma3wIs/EQ==" data-cf-beacon='{"version":"2024.11.0","token":"45c2bf8136a245cd97f1c2e9a96c0730","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v833ccba57c9e4d2798f2e76cebdd09a11778172276447" integrity="sha512-57MDmcccJXYtNnH+ZiBwzC4jb2rvgVCEokYN+L/nLlmO8rfYT/gIpW2A569iJ/3b+0UEasghjuZH/ma3wIs/EQ==" data-cf-beacon='{"version":"2024.11.0","token":"45c2bf8136a245cd97f1c2e9a96c0730","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
-
     <script>
       document.addEventListener('DOMContentLoaded', () => {
         const navItems = document.querySelectorAll('.nav-links a, .ghost-btn');
@@ -11082,9 +11523,6 @@ body.contact-modal-open {
         });
       });
     </script>
-
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v833ccba57c9e4d2798f2e76cebdd09a11778172276447" integrity="sha512-57MDmcccJXYtNnH+ZiBwzC4jb2rvgVCEokYN+L/nLlmO8rfYT/gIpW2A569iJ/3b+0UEasghjuZH/ma3wIs/EQ==" data-cf-beacon='{"version":"2024.11.0","token":"45c2bf8136a245cd97f1c2e9a96c0730","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v833ccba57c9e4d2798f2e76cebdd09a11778172276447" integrity="sha512-57MDmcccJXYtNnH+ZiBwzC4jb2rvgVCEokYN+L/nLlmO8rfYT/gIpW2A569iJ/3b+0UEasghjuZH/ma3wIs/EQ==" data-cf-beacon='{"version":"2024.11.0","token":"45c2bf8136a245cd97f1c2e9a96c0730","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
 
 <script>
   /* ===== 菜单点击定位优化：根据当前顶部菜单高度动态留白 ===== */
@@ -11138,67 +11576,15 @@ body.contact-modal-open {
   })();
 </script>
 
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v833ccba57c9e4d2798f2e76cebdd09a11778172276447" integrity="sha512-57MDmcccJXYtNnH+ZiBwzC4jb2rvgVCEokYN+L/nLlmO8rfYT/gIpW2A569iJ/3b+0UEasghjuZH/ma3wIs/EQ==" data-cf-beacon='{"version":"2024.11.0","token":"45c2bf8136a245cd97f1c2e9a96c0730","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v833ccba57c9e4d2798f2e76cebdd09a11778172276447" integrity="sha512-57MDmcccJXYtNnH+ZiBwzC4jb2rvgVCEokYN+L/nLlmO8rfYT/gIpW2A569iJ/3b+0UEasghjuZH/ma3wIs/EQ==" data-cf-beacon='{"version":"2024.11.0","token":"45c2bf8136a245cd97f1c2e9a96c0730","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v833ccba57c9e4d2798f2e76cebdd09a11778172276447" integrity="sha512-57MDmcccJXYtNnH+ZiBwzC4jb2rvgVCEokYN+L/nLlmO8rfYT/gIpW2A569iJ/3b+0UEasghjuZH/ma3wIs/EQ==" data-cf-beacon='{"version":"2024.11.0","token":"45c2bf8136a245cd97f1c2e9a96c0730","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v833ccba57c9e4d2798f2e76cebdd09a11778172276447" integrity="sha512-57MDmcccJXYtNnH+ZiBwzC4jb2rvgVCEokYN+L/nLlmO8rfYT/gIpW2A569iJ/3b+0UEasghjuZH/ma3wIs/EQ==" data-cf-beacon='{"version":"2024.11.0","token":"45c2bf8136a245cd97f1c2e9a96c0730","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"45c2bf8136a245cd97f1c2e9a96c0730","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"45c2bf8136a245cd97f1c2e9a96c0730","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"45c2bf8136a245cd97f1c2e9a96c0730","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"45c2bf8136a245cd97f1c2e9a96c0730","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"45c2bf8136a245cd97f1c2e9a96c0730","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"45c2bf8136a245cd97f1c2e9a96c0730","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"45c2bf8136a245cd97f1c2e9a96c0730","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"45c2bf8136a245cd97f1c2e9a96c0730","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"45c2bf8136a245cd97f1c2e9a96c0730","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"45c2bf8136a245cd97f1c2e9a96c0730","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"45c2bf8136a245cd97f1c2e9a96c0730","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"45c2bf8136a245cd97f1c2e9a96c0730","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"45c2bf8136a245cd97f1c2e9a96c0730","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"45c2bf8136a245cd97f1c2e9a96c0730","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"45c2bf8136a245cd97f1c2e9a96c0730","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"45c2bf8136a245cd97f1c2e9a96c0730","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"45c2bf8136a245cd97f1c2e9a96c0730","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"45c2bf8136a245cd97f1c2e9a96c0730","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"45c2bf8136a245cd97f1c2e9a96c0730","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"45c2bf8136a245cd97f1c2e9a96c0730","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"45c2bf8136a245cd97f1c2e9a96c0730","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"45c2bf8136a245cd97f1c2e9a96c0730","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"45c2bf8136a245cd97f1c2e9a96c0730","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"45c2bf8136a245cd97f1c2e9a96c0730","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"45c2bf8136a245cd97f1c2e9a96c0730","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"45c2bf8136a245cd97f1c2e9a96c0730","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"45c2bf8136a245cd97f1c2e9a96c0730","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"45c2bf8136a245cd97f1c2e9a96c0730","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"45c2bf8136a245cd97f1c2e9a96c0730","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"45c2bf8136a245cd97f1c2e9a96c0730","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"45c2bf8136a245cd97f1c2e9a96c0730","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"45c2bf8136a245cd97f1c2e9a96c0730","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"45c2bf8136a245cd97f1c2e9a96c0730","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"45c2bf8136a245cd97f1c2e9a96c0730","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"45c2bf8136a245cd97f1c2e9a96c0730","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"45c2bf8136a245cd97f1c2e9a96c0730","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"45c2bf8136a245cd97f1c2e9a96c0730","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"45c2bf8136a245cd97f1c2e9a96c0730","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"45c2bf8136a245cd97f1c2e9a96c0730","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"45c2bf8136a245cd97f1c2e9a96c0730","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"45c2bf8136a245cd97f1c2e9a96c0730","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"45c2bf8136a245cd97f1c2e9a96c0730","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"45c2bf8136a245cd97f1c2e9a96c0730","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"45c2bf8136a245cd97f1c2e9a96c0730","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"45c2bf8136a245cd97f1c2e9a96c0730","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"45c2bf8136a245cd97f1c2e9a96c0730","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"45c2bf8136a245cd97f1c2e9a96c0730","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"45c2bf8136a245cd97f1c2e9a96c0730","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
-
 <script>
   /* ===== Contact popup upgrade: email copy + WeChat / Lark QR ===== */
   (function () {
     const contactData = {
       email: {
-        title: "邮箱 / E-mail",
-        desc: "我的邮箱是 1471020001@qq.com，点击下方按钮即可复制。",
-        value: "1471020001@qq.com"
+        title: "邮箱 / 手机号",
+        desc: "我的邮箱是 1471020001@qq.com，手机号是 15306088800，点击对应按钮即可复制。",
+        value: "1471020001@qq.com",
+        phone: "15306088800"
       },
       wechat: {
         title: "微信 / WeChat",
@@ -11222,7 +11608,9 @@ body.contact-modal-open {
     const descEl = document.getElementById("contactModalDesc");
     const emailPanel = document.getElementById("contactEmailPanel");
     const emailValue = document.getElementById("contactEmailValue");
-    const copyBtn = document.getElementById("contactCopyBtn");
+    const phoneValue = document.getElementById("contactPhoneValue");
+    const copyEmailBtn = document.getElementById("contactCopyEmailBtn");
+    const copyPhoneBtn = document.getElementById("contactCopyPhoneBtn");
     const qrPanel = document.getElementById("contactQrPanel");
     const qrImage = document.getElementById("contactQrImage");
     let lastTrigger = null;
@@ -11237,7 +11625,9 @@ body.contact-modal-open {
 
       if (type === "email") {
         emailValue.textContent = data.value;
-        copyBtn.textContent = "复制邮箱";
+        phoneValue.textContent = data.phone;
+        copyEmailBtn.textContent = "复制邮箱";
+        copyPhoneBtn.textContent = "复制手机号";
         emailPanel.classList.add("show");
         qrPanel.classList.remove("show");
         qrImage.removeAttribute("src");
@@ -11262,8 +11652,7 @@ body.contact-modal-open {
       if (lastTrigger) lastTrigger.focus();
     }
 
-    async function copyEmail() {
-      const text = contactData.email.value;
+    async function copyText(text, button, defaultText) {
       try {
         if (navigator.clipboard && window.isSecureContext) {
           await navigator.clipboard.writeText(text);
@@ -11278,16 +11667,24 @@ body.contact-modal-open {
           document.execCommand("copy");
           document.body.removeChild(tempInput);
         }
-        copyBtn.textContent = "已复制";
+        button.textContent = "已复制";
         window.setTimeout(function () {
-          copyBtn.textContent = "复制邮箱";
+          button.textContent = defaultText;
         }, 1500);
       } catch (error) {
-        copyBtn.textContent = "复制失败";
+        button.textContent = "复制失败";
         window.setTimeout(function () {
-          copyBtn.textContent = "复制邮箱";
+          button.textContent = defaultText;
         }, 1500);
       }
+    }
+
+    function copyEmail() {
+      copyText(contactData.email.value, copyEmailBtn, "复制邮箱");
+    }
+
+    function copyPhone() {
+      copyText(contactData.email.phone, copyPhoneBtn, "复制手机号");
     }
 
     document.querySelectorAll(".contact-trigger").forEach(function (button) {
@@ -11305,12 +11702,10 @@ body.contact-modal-open {
         closeContact();
       }
     });
-    copyBtn.addEventListener("click", copyEmail);
+    copyEmailBtn.addEventListener("click", copyEmail);
+    copyPhoneBtn.addEventListener("click", copyPhone);
   })();
 </script>
-
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"45c2bf8136a245cd97f1c2e9a96c0730","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
-<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"45c2bf8136a245cd97f1c2e9a96c0730","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
 <script defer src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"45c2bf8136a245cd97f1c2e9a96c0730","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
 <script defer src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"45c2bf8136a245cd97f1c2e9a96c0730","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
 </body>
