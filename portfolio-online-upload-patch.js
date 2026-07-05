@@ -352,16 +352,21 @@
   clearCurrentUploadedImage = window.clearCurrentUploadedImage = clearCurrentUploadedImageRemote;
   clearAllUploadedImages = window.clearAllUploadedImages = clearAllUploadedImagesRemote;
 
-  document.addEventListener("DOMContentLoaded", setUploadNoteText);
-  document.addEventListener("DOMContentLoaded", function () {
+  function bindSyncButton() {
     const syncButton = document.getElementById("aigcUploadSyncLocalBtn");
-    if (syncButton) {
-      syncButton.addEventListener("click", function (event) {
-        event.preventDefault();
-        event.stopPropagation();
-        syncLegacyLocalImagesToRemote();
-      });
-    }
+    if (!syncButton || syncButton.dataset.remoteSyncBound === "true") return;
+    syncButton.dataset.remoteSyncBound = "true";
+    syncButton.addEventListener("click", function (event) {
+      event.preventDefault();
+      event.stopPropagation();
+      syncLegacyLocalImagesToRemote();
+    });
+  }
+
+  document.addEventListener("DOMContentLoaded", function () {
+    setUploadNoteText();
+    bindSyncButton();
   });
   setUploadNoteText();
+  bindSyncButton();
 })();
