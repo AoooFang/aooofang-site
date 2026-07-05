@@ -1,7 +1,8 @@
 const {
   buildImagePath,
-  buildRawUrl,
+  buildPublicImageUrl,
   getManifest,
+  normalizeItemsForPublic,
   parseDataUrl,
   parseRequestBody,
   saveManifest,
@@ -48,7 +49,7 @@ module.exports = async function handler(req, res) {
       );
 
       nextItems[number] = {
-        url: buildRawUrl(imagePath),
+        url: buildPublicImageUrl(req, imagePath),
         path: imagePath,
         updatedAt: new Date().toISOString()
       };
@@ -59,7 +60,7 @@ module.exports = async function handler(req, res) {
 
     return sendJson(res, 200, {
       ok: true,
-      items: nextItems
+      items: normalizeItemsForPublic(req, nextItems)
     });
   } catch (error) {
     return sendJson(res, 500, {

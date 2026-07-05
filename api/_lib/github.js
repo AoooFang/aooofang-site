@@ -30,6 +30,12 @@ function sendJson(res, statusCode, payload) {
   res.end(JSON.stringify(payload));
 }
 
+function getBaseUrl(req) {
+  const proto = req.headers["x-forwarded-proto"] || "https";
+  const host = req.headers["x-forwarded-host"] || req.headers.host || "";
+  return `${proto}://${host}`;
+}
+
 async function githubRequest(path, options = {}) {
   const config = ensureConfig();
   const response = await fetch(`${GITHUB_API}${path}`, {
@@ -66,6 +72,24 @@ async function getContent(path) {
   return {
     sha: data.sha,
     content,
+    raw: data
+  };
+}
+
+async function getBinaryContent(path) {
+  const config = ensureConfig();
+  const response = await githubRequest(`/repos/${config.owner}/${config.repo}/contents/${encodeURIComponent(path).replace(/%2F/g, "/")}?ref=${encodeURIComponent(config.branch)}`);
+  if (response.status === 404) {
+    return null;
+  }
+  if (!response.ok) {
+    throw new Error(`读取 GitHub 二进制文件失败：${response.status}`);
+  }
+  const data = await response.json();
+  return {
+    sha: data.sha,
+    contentType: data.type,
+    buffer: Buffer.from(data.content || "", "base64"),
     raw: data
   };
 }
@@ -175,10 +199,40 @@ function buildRawUrl(path) {
   return `https://raw.githubusercontent.com/${config.owner}/${config.repo}/${config.branch}/${path}`;
 }
 
+function buildPublicImageUrl(req, path) {
+  const baseUrl = getBaseUrl(req);
+  return `${baseUrl}/api/portfolio/image?path=${encodeURIComponent(path)}`;
+}
+
+function normalizeItemForPublic(req, value) {
+  if (!value) return value;
+  if (typeof value === "string") {
+    return value;
+  }
+  if (!value.path) {
+    return value;
+  }
+  return {
+    ...value,
+    url: buildPublicImageUrl(req, value.path)
+  };
+}
+
+function normalizeItemsForPublic(req, items) {
+  const result = {};
+  Object.entries(items || {}).forEach(([key, value]) => {
+    result[key] = normalizeItemForPublic(req, value);
+  });
+  return result;
+}
+
 module.exports = {
   buildImagePath,
+  buildPublicImageUrl,
   buildRawUrl,
+  getBinaryContent,
   getManifest,
+  normalizeItemsForPublic,
   parseDataUrl,
   parseRequestBody,
   saveManifest,

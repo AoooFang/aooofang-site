@@ -1,5 +1,6 @@
 const {
   getManifest,
+  normalizeItemsForPublic,
   sendJson
 } = require("../_lib/github");
 
@@ -12,8 +13,13 @@ module.exports = async function handler(req, res) {
     const collectionKey = String(req.query.collectionKey || "").trim();
     const manifestInfo = await getManifest();
     const items = collectionKey
-      ? (manifestInfo.data.collections[collectionKey] || {})
-      : manifestInfo.data.collections;
+      ? normalizeItemsForPublic(req, manifestInfo.data.collections[collectionKey] || {})
+      : Object.fromEntries(
+          Object.entries(manifestInfo.data.collections || {}).map(([key, value]) => [
+            key,
+            normalizeItemsForPublic(req, value || {})
+          ])
+        );
 
     return sendJson(res, 200, {
       ok: true,

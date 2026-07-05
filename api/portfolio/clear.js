@@ -1,5 +1,6 @@
 const {
   getManifest,
+  normalizeItemsForPublic,
   parseRequestBody,
   saveManifest,
   sendJson,
@@ -41,7 +42,7 @@ module.exports = async function handler(req, res) {
 
     return sendJson(res, 200, {
       ok: true,
-      items: manifestInfo.data.collections[collectionKey] || {}
+      items: normalizeItemsForPublic(req, manifestInfo.data.collections[collectionKey] || {})
     });
   } catch (error) {
     return sendJson(res, 500, {
