@@ -473,6 +473,52 @@
         "updatedAt": "2026-07-05T08:57:46.955Z"
       }
     },
-    "portfolio:type": {}
+    "portfolio:type": {
+      "01": {
+        "url": "https://aooofang.cn/api/portfolio/image?path=portfolio-data%2Fuploads%2Fportfolio-type%2F01-1783241912545.webp",
+        "path": "portfolio-data/uploads/portfolio-type/01-1783241912545.webp",
+        "updatedAt": "2026-07-05T08:58:33.168Z"
+      },
+      "02": {
+        "url": "https://aooofang.cn/api/portfolio/image?path=portfolio-data%2Fuploads%2Fportfolio-type%2F02-1783241913169.webp",
+        "path": "portfolio-data/uploads/portfolio-type/02-1783241913169.webp",
+        "updatedAt": "2026-07-05T08:58:33.763Z"
+      },
+      "03": {
+        "url": "https://aooofang.cn/api/portfolio/image?path=portfolio-data%2Fuploads%2Fportfolio-type%2F03-1783241913763.webp",
+        "path": "portfolio-data/uploads/portfolio-type/03-1783241913763.webp",
+        "updatedAt": "2026-07-05T08:58:34.343Z"
+      },
+      "04": {
+        "url": "https://aooofang.cn/api/portfolio/image?path=portfolio-data%2Fuploads%2Fportfolio-type%2F04-1783241914343.webp",
+        "path": "portfolio-data/uploads/portfolio-type/04-1783241914343.webp",
+        "updatedAt": "2026-07-05T08:58:35.002Z"
+      },
+      "05": {
+        "url": "https://aooofang.cn/api/portfolio/image?path=portfolio-data%2Fuploads%2Fportfolio-type%2F05-1783241915002.webp",
+        "path": "portfolio-data/uploads/portfolio-type/05-1783241915002.webp",
+        "updatedAt": "2026-07-05T08:58:35.848Z"
+      },
+      "06": {
+        "url": "https://aooofang.cn/api/portfolio/image?path=portfolio-data%2Fuploads%2Fportfolio-type%2F06-1783241915848.webp",
+        "path": "portfolio-data/uploads/portfolio-type/06-1783241915848.webp",
+        "updatedAt": "2026-07-05T08:58:36.478Z"
+      },
+      "07": {
+        "url": "https://aooofang.cn/api/portfolio/image?path=portfolio-data%2Fuploads%2Fportfolio-type%2F07-1783241916478.webp",
+        "path": "portfolio-data/uploads/portfolio-type/07-1783241916478.webp",
+        "updatedAt": "2026-07-05T08:58:37.064Z"
+      },
+      "08": {
+        "url": "https://aooofang.cn/api/portfolio/image?path=portfolio-data%2Fuploads%2Fportfolio-type%2F08-1783241917064.webp",
+        "path": "portfolio-data/uploads/portfolio-type/08-1783241917064.webp",
+        "updatedAt": "2026-07-05T08:58:37.657Z"
+      },
+      "09": {
+        "url": "https://aooofang.cn/api/portfolio/image?path=portfolio-data%2Fuploads%2Fportfolio-type%2F09-1783241917657.webp",
+        "path": "portfolio-data/uploads/portfolio-type/09-1783241917657.webp",
+        "updatedAt": "2026-07-05T08:58:38.297Z"
+      }
+    }
   }
 }
