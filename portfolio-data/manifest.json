@@ -1,6 +1,7 @@
 {
   "version": 1,
   "collections": {
-    "portfolio:poster": {}
+    "portfolio:poster": {},
+    "aigc:ppt": {}
   }
 }
