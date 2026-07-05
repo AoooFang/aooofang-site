@@ -6,6 +6,7 @@
   };
 
   const ADMIN_PASSWORD_SESSION_KEY = "aooofang_portfolio_upload_admin_password_remote";
+  const originalGetStoredUploadedImage = typeof getStoredUploadedImage === "function" ? getStoredUploadedImage : null;
   const remoteUploadsCache = window.__aooofangRemoteUploadsCache || (window.__aooofangRemoteUploadsCache = Object.create(null));
   const remoteLoadState = window.__aooofangRemoteUploadsLoadState || (window.__aooofangRemoteUploadsLoadState = Object.create(null));
 
@@ -52,23 +53,37 @@
     }
   }
 
-  function getStoredUploadedImage(number) {
+  function getLegacyLocalImage(number) {
+    if (!originalGetStoredUploadedImage) return "";
+    try {
+      return originalGetStoredUploadedImage(number) || "";
+    } catch (error) {
+      return "";
+    }
+  }
+
+  function getStoredUploadedImageRemote(number) {
     const bucket = getRemoteBucket();
     const value = bucket[number];
     if (!value) return "";
     return typeof value === "string" ? value : (value.url || "");
   }
 
-  function getUploadedImage(number) {
-    const remoteImage = getStoredUploadedImage(number);
+  function getUploadedImageRemote(number) {
+    const remoteImage = getStoredUploadedImageRemote(number);
     if (remoteImage) return remoteImage;
+    const legacyLocalImage = getLegacyLocalImage(number);
+    if (legacyLocalImage) return legacyLocalImage;
     const staticCandidates = getPortfolioStaticImageCandidates(number);
     return staticCandidates[0] || "";
   }
 
-  function getUploadedImageBackground(number, dataUrl = getUploadedImage(number)) {
-    const remoteImage = getStoredUploadedImage(number);
+  function getUploadedImageBackgroundRemote(number, dataUrl = getUploadedImageRemote(number)) {
+    const remoteImage = getStoredUploadedImageRemote(number);
     if (remoteImage) return `url("${escapeCssUrl(remoteImage)}")`;
+
+    const legacyLocalImage = getLegacyLocalImage(number);
+    if (legacyLocalImage) return `url("${escapeCssUrl(legacyLocalImage)}")`;
 
     const staticCandidates = getPortfolioStaticImageCandidates(number);
     if (staticCandidates.length) {
@@ -101,7 +116,7 @@
   }
 
   function requestAigcUploadPassword() {
-    if (getAigcUploadAdminPassword()) {
+  function requestAigcUploadPasswordRemote() {
       setAigcUploadAdminVerified(true);
       return true;
     }
@@ -123,8 +138,35 @@
     return true;
   }
 
-  async function saveUploadFiles(files) {
-    if (!requestAigcUploadPassword()) {
+  async function uploadPayloadItems(payloadItems, doneMessage) {
+    if (!payloadItems.length) {
+      setAigcUploadStatus("当前没有可同步或可上传的图片。");
+      return;
+    }
+
+    const result = await requestJson(API_ENDPOINTS.upload, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        collectionKey: currentAigcCollectionKey,
+        password: getAigcUploadAdminPassword(),
+        items: payloadItems
+      })
+    });
+
+    setRemoteBucket(currentAigcCollectionKey, result.items || {});
+    const lastSavedNumber = payloadItems[payloadItems.length - 1]?.number || currentAigcUploadTargetNumber || "01";
+    await loadRemoteUploadsForCollection(currentAigcCollectionKey, true);
+    await renderAigcCollection(currentAigcCollectionSource, {
+      preserveUploadAdmin: true,
+      selectedNumber: lastSavedNumber
+    });
+    updateAigcUploadAdminSelection(lastSavedNumber);
+    setAigcUploadStatus(doneMessage || `已上传 ${payloadItems.length} 张图片，所有访问者现在都能看到。`);
+  }
+
+  async function saveUploadFilesRemote(files) {
+    if (!requestAigcUploadPasswordRemote()) {
       if (aigcUploadFileInput) aigcUploadFileInput.value = "";
       return;
     }
@@ -163,25 +205,7 @@
     }
 
     try {
-      const result = await requestJson(API_ENDPOINTS.upload, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          collectionKey: currentAigcCollectionKey,
-          password: getAigcUploadAdminPassword(),
-          items: payloadItems
-        })
-      });
-
-      setRemoteBucket(currentAigcCollectionKey, result.items || {});
-      const lastSavedNumber = payloadItems[payloadItems.length - 1]?.number || currentAigcUploadTargetNumber || "01";
-      await loadRemoteUploadsForCollection(currentAigcCollectionKey, true);
-      renderAigcCollection(currentAigcCollectionSource, {
-        preserveUploadAdmin: true,
-        selectedNumber: lastSavedNumber
-      });
-      updateAigcUploadAdminSelection(lastSavedNumber);
-      setAigcUploadStatus(`已上传 ${payloadItems.length} 张图片，所有访问者现在都能看到。`);
+      await uploadPayloadItems(payloadItems, `已上传 ${payloadItems.length} 张图片，所有访问者现在都能看到。`);
     } catch (error) {
       if (error && error.status === 401) {
         setAigcUploadAdminPassword("");
@@ -192,8 +216,41 @@
     }
   }
 
-  async function clearCurrentUploadedImage() {
-    if (!requestAigcUploadPassword()) return;
+  async function syncLegacyLocalImagesToRemote() {
+    if (!requestAigcUploadPasswordRemote()) return;
+    const items = (currentAigcCollection && currentAigcCollection.items) || [];
+    const total = getAigcSlotTotal(items);
+    const payloadItems = [];
+
+    for (let index = 0; index < total; index += 1) {
+      const number = String(index + 1).padStart(2, "0");
+      const dataUrl = getLegacyLocalImage(number);
+      if (!dataUrl) continue;
+      payloadItems.push({
+        number,
+        dataUrl,
+        fileName: `legacy-local-${number}.png`
+      });
+    }
+
+    if (!payloadItems.length) {
+      setAigcUploadStatus("当前浏览器里没有检测到可同步的旧图片。");
+      return;
+    }
+
+    setAigcUploadStatus(`检测到 ${payloadItems.length} 张本机旧图片，正在同步到线上……`);
+    try {
+      await uploadPayloadItems(payloadItems, `已将本机中的 ${payloadItems.length} 张旧图片同步到线上，别人现在也能看到。`);
+    } catch (error) {
+      if (error && error.status === 401) {
+        setAigcUploadAdminPassword("");
+      }
+      setAigcUploadStatus(error && error.message ? error.message : "同步到线上失败");
+    }
+  }
+
+  async function clearCurrentUploadedImageRemote() {
+    if (!requestAigcUploadPasswordRemote()) return;
     const number = currentAigcUploadTargetNumber || "01";
 
     try {
@@ -208,7 +265,7 @@
       });
       setRemoteBucket(currentAigcCollectionKey, result.items || {});
       await loadRemoteUploadsForCollection(currentAigcCollectionKey, true);
-      renderAigcCollection(currentAigcCollectionSource, {
+      await renderAigcCollection(currentAigcCollectionSource, {
         preserveUploadAdmin: true,
         selectedNumber: number
       });
@@ -222,8 +279,8 @@
     }
   }
 
-  async function clearAllUploadedImages() {
-    if (!requestAigcUploadPassword()) return;
+  async function clearAllUploadedImagesRemote() {
+    if (!requestAigcUploadPasswordRemote()) return;
     const ok = window.confirm("确定清除当前作品窗口内已上传的全部线上图片吗？");
     if (!ok) return;
 
@@ -239,7 +296,7 @@
       });
       setRemoteBucket(currentAigcCollectionKey, result.items || {});
       await loadRemoteUploadsForCollection(currentAigcCollectionKey, true);
-      renderAigcCollection(currentAigcCollectionSource, {
+      await renderAigcCollection(currentAigcCollectionSource, {
         preserveUploadAdmin: true,
         selectedNumber: "01"
       });
@@ -253,6 +310,26 @@
     }
   }
 
+  function countLegacyLocalImages() {
+    const items = (currentAigcCollection && currentAigcCollection.items) || [];
+    const total = getAigcSlotTotal(items);
+    let count = 0;
+    for (let index = 0; index < total; index += 1) {
+      const number = String(index + 1).padStart(2, "0");
+      if (getLegacyLocalImage(number)) count += 1;
+    }
+    return count;
+  }
+
+  function updateSyncHint() {
+    if (!aigcUploadStatus) return;
+    const remoteCount = Object.keys(getRemoteBucket(currentAigcCollectionKey)).length;
+    const legacyCount = countLegacyLocalImages();
+    if (legacyCount > 0 && remoteCount === 0) {
+      setAigcUploadStatus(`检测到当前浏览器里有 ${legacyCount} 张旧图片尚未发布。点击“同步本机到线上”即可正式发布给所有人查看。`);
+    }
+  }
+
   const originalRenderAigcCollection = renderAigcCollection;
   renderAigcCollection = async function (source, options = {}) {
     const collection = getCollection(source);
@@ -262,9 +339,29 @@
       setAigcUploadStatus("正在读取线上作品数据……");
     }
     await loadRemoteUploadsForCollection(currentAigcCollectionKey, false);
-    return originalRenderAigcCollection.call(this, source, options);
+    const result = await originalRenderAigcCollection.call(this, source, options);
+    updateSyncHint();
+    return result;
   };
 
+  getStoredUploadedImage = window.getStoredUploadedImage = getStoredUploadedImageRemote;
+  getUploadedImage = window.getUploadedImage = getUploadedImageRemote;
+  getUploadedImageBackground = window.getUploadedImageBackground = getUploadedImageBackgroundRemote;
+  requestAigcUploadPassword = window.requestAigcUploadPassword = requestAigcUploadPasswordRemote;
+  saveUploadFiles = window.saveUploadFiles = saveUploadFilesRemote;
+  clearCurrentUploadedImage = window.clearCurrentUploadedImage = clearCurrentUploadedImageRemote;
+  clearAllUploadedImages = window.clearAllUploadedImages = clearAllUploadedImagesRemote;
+
   document.addEventListener("DOMContentLoaded", setUploadNoteText);
+  document.addEventListener("DOMContentLoaded", function () {
+    const syncButton = document.getElementById("aigcUploadSyncLocalBtn");
+    if (syncButton) {
+      syncButton.addEventListener("click", function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+        syncLegacyLocalImagesToRemote();
+      });
+    }
+  });
   setUploadNoteText();
 })();
