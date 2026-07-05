@@ -2,6 +2,12 @@
   "version": 1,
   "collections": {
     "portfolio:poster": {},
-    "aigc:ppt": {}
+    "aigc:ppt": {
+      "01": {
+        "url": "https://aooofang.cn/api/portfolio/image?path=portfolio-data%2Fuploads%2Faigc-ppt%2F01-1783241456251.webp",
+        "path": "portfolio-data/uploads/aigc-ppt/01-1783241456251.webp",
+        "updatedAt": "2026-07-05T08:50:56.934Z"
+      }
+    }
   }
 }
