@@ -562,6 +562,37 @@
         "updatedAt": "2026-07-05T08:59:12.073Z"
       }
     },
-    "portfolio:wechat": {}
+    "portfolio:wechat": {
+      "01": {
+        "url": "https://aooofang.cn/api/portfolio/image?path=portfolio-data%2Fuploads%2Fportfolio-wechat%2F01-1783241982236.webp",
+        "path": "portfolio-data/uploads/portfolio-wechat/01-1783241982236.webp",
+        "updatedAt": "2026-07-05T08:59:42.839Z"
+      },
+      "02": {
+        "url": "https://aooofang.cn/api/portfolio/image?path=portfolio-data%2Fuploads%2Fportfolio-wechat%2F02-1783241982839.webp",
+        "path": "portfolio-data/uploads/portfolio-wechat/02-1783241982839.webp",
+        "updatedAt": "2026-07-05T08:59:43.497Z"
+      },
+      "03": {
+        "url": "https://aooofang.cn/api/portfolio/image?path=portfolio-data%2Fuploads%2Fportfolio-wechat%2F03-1783241983497.webp",
+        "path": "portfolio-data/uploads/portfolio-wechat/03-1783241983497.webp",
+        "updatedAt": "2026-07-05T08:59:44.132Z"
+      },
+      "04": {
+        "url": "https://aooofang.cn/api/portfolio/image?path=portfolio-data%2Fuploads%2Fportfolio-wechat%2F04-1783241984132.webp",
+        "path": "portfolio-data/uploads/portfolio-wechat/04-1783241984132.webp",
+        "updatedAt": "2026-07-05T08:59:44.779Z"
+      },
+      "05": {
+        "url": "https://aooofang.cn/api/portfolio/image?path=portfolio-data%2Fuploads%2Fportfolio-wechat%2F05-1783241984779.webp",
+        "path": "portfolio-data/uploads/portfolio-wechat/05-1783241984779.webp",
+        "updatedAt": "2026-07-05T08:59:45.369Z"
+      },
+      "06": {
+        "url": "https://aooofang.cn/api/portfolio/image?path=portfolio-data%2Fuploads%2Fportfolio-wechat%2F06-1783241985370.webp",
+        "path": "portfolio-data/uploads/portfolio-wechat/06-1783241985370.webp",
+        "updatedAt": "2026-07-05T08:59:45.967Z"
+      }
+    }
   }
 }
