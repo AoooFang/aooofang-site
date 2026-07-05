@@ -21,7 +21,7 @@
   function setUploadNoteText() {
     const note = document.querySelector(".aigc-upload-note");
     if (note) {
-      note.textContent = "上传图片前需输入管理密码；图片会保存到线上共享存储，所有访问者打开网站都能看到。批量上传会从当前编号开始依次替换。";
+      note.textContent = "旧作品图片目前不在项目里；如果你要重新补全整套作品，请先选中 01，再点“批量上传（推荐）”，一次选择多张图片，系统会按编号顺序依次写入并保存到线上共享存储。";
     }
   }
 

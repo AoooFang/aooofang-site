@@ -9035,11 +9035,11 @@ html.photo-lightbox-lock body {
         </div>
         <div class="aigc-upload-controls">
           <button class="aigc-upload-btn" id="aigcUploadCurrentBtn" type="button">上传当前编号</button>
-          <button class="aigc-upload-btn" id="aigcUploadBatchBtn" type="button">批量上传</button>
+          <button class="aigc-upload-btn" id="aigcUploadBatchBtn" type="button">批量上传（推荐）</button>
           <button class="aigc-upload-btn danger" id="aigcUploadClearCurrentBtn" type="button">清除当前</button>
           <button class="aigc-upload-btn danger" id="aigcUploadClearAllBtn" type="button">清除本窗口全部</button>
         </div>
-        <p class="aigc-upload-note">上传图片前需输入管理密码；选择编号后上传图片，批量上传会从当前编号开始依次替换。图片不限长宽比例，上传后会保存到线上共享存储，所有访问者都能看到。</p>
+        <p class="aigc-upload-note">旧作品图片目前不在项目里；如果你要重新补全整套作品，请先选中 01，再点“批量上传（推荐）”，一次选择多张图片，系统会按编号顺序依次写入并保存到线上共享存储。</p>
         <div class="aigc-upload-status" id="aigcUploadStatus" role="status" aria-live="polite"></div>
         <div class="aigc-upload-slot-grid" id="aigcUploadSlotGrid" aria-label="作品编号上传列表"></div>
       </div>
@@ -9733,7 +9733,7 @@ html.photo-lightbox-lock body {
       aigcUploadAdmin.classList.add("open");
       aigcUploadAdmin.setAttribute("aria-hidden", "false");
       if (aigcUploadAdminToggle) aigcUploadAdminToggle.setAttribute("aria-expanded", "true");
-      setAigcUploadStatus(`请选择 01 - ${AIGC_UPLOAD_SLOT_COUNT} 编号后上传作品图片。`);
+      setAigcUploadStatus(`当前旧图未保存在项目里。若要重新补全整套作品，请先选中 01，再点击“批量上传（推荐）”。`);
       pauseAigcAutoRotate();
     }
 
