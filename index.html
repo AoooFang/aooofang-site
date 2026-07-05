@@ -9074,7 +9074,7 @@ html.photo-lightbox-lock body {
       <button class="photo-lightbox-close" id="closePhotoLightbox" type="button" aria-label="关闭个人照片预览">×</button>
       <img id="photoLightboxImage" src="" alt="个人照片放大预览">
       <div class="photo-zoom-lens" id="photoZoomLens" aria-hidden="true"></div>
-      <div class="photo-zoom-hint" role="status">单击照片开启 / 关闭放大镜，滚轮可缩放</div>
+      <div class="photo-zoom-hint" role="status">单击照片开启 / 关闭放大镜；放大窗会显示在图片外侧，滚轮可缩放</div>
       <button class="photo-zoom-toggle" id="photoZoomToggle" type="button" aria-label="开启局部放大" aria-pressed="false" title="局部放大">
         <svg class="photo-zoom-toggle-icon" viewBox="0 0 28 28" aria-hidden="true">
           <circle cx="12" cy="12" r="7.25"></circle>
@@ -11225,7 +11225,7 @@ html.photo-lightbox-lock body {
       lastTrigger = event && event.currentTarget ? event.currentTarget : photoTrigger;
       photoLightboxImage.src = img.currentSrc || img.src;
       photoLightboxImage.alt = img.alt || "个人照片放大预览";
-      photoLightboxImage.title = "单击开启 / 关闭放大镜；拖动可查看局部细节";
+      photoLightboxImage.title = "单击开启 / 关闭放大镜；外侧独立放大窗可查看局部细节";
       photoZoomLens.style.backgroundImage = `url("${String(img.currentSrc || img.src).replace(/"/g, '\\"')}")`;
 
       setZoomEnabled(false);
@@ -11269,14 +11269,28 @@ html.photo-lightbox-lock body {
       const lensWidth = photoZoomLens.offsetWidth || 260;
       const lensHeight = photoZoomLens.offsetHeight || 360;
       const mobileLike = isCoarsePointer ? isCoarsePointer.matches : false;
+      const sideGap = 24;
+      const spaceRight = window.innerWidth - viewportGap - imageRect.right;
+      const spaceLeft = imageRect.left - viewportGap;
 
-      let lensLeft = imageRect.left - cardRect.left + pointerX - lensWidth / 2;
+      let lensLeft = imageRect.right - cardRect.left + sideGap;
       let lensTop = imageRect.top - cardRect.top + pointerY - lensHeight / 2;
 
       if (mobileLike) {
-        lensTop = imageRect.top - cardRect.top + pointerY - lensHeight - 24;
+        lensLeft = imageRect.left - cardRect.left + pointerX - lensWidth / 2;
+        lensTop = imageRect.top - cardRect.top + pointerY - lensHeight - sideGap;
         if (cardRect.top + lensTop < viewportGap) {
-          lensTop = imageRect.top - cardRect.top + pointerY + 24;
+          lensTop = imageRect.top - cardRect.top + pointerY + sideGap;
+        }
+      } else if (spaceRight >= lensWidth + sideGap) {
+        lensLeft = imageRect.right - cardRect.left + sideGap;
+      } else if (spaceLeft >= lensWidth + sideGap) {
+        lensLeft = imageRect.left - cardRect.left - lensWidth - sideGap;
+      } else {
+        lensLeft = imageRect.left - cardRect.left + pointerX - lensWidth / 2;
+        lensTop = imageRect.bottom - cardRect.top + sideGap;
+        if (cardRect.top + lensTop + lensHeight > window.innerHeight - viewportGap) {
+          lensTop = imageRect.top - cardRect.top - lensHeight - sideGap;
         }
       }
 
