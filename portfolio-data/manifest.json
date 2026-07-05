@@ -520,6 +520,47 @@
         "updatedAt": "2026-07-05T08:58:38.297Z"
       }
     },
-    "portfolio:ip": {}
+    "portfolio:ip": {
+      "01": {
+        "url": "https://aooofang.cn/api/portfolio/image?path=portfolio-data%2Fuploads%2Fportfolio-ip%2F01-1783241946850.webp",
+        "path": "portfolio-data/uploads/portfolio-ip/01-1783241946850.webp",
+        "updatedAt": "2026-07-05T08:59:07.464Z"
+      },
+      "02": {
+        "url": "https://aooofang.cn/api/portfolio/image?path=portfolio-data%2Fuploads%2Fportfolio-ip%2F02-1783241947464.webp",
+        "path": "portfolio-data/uploads/portfolio-ip/02-1783241947464.webp",
+        "updatedAt": "2026-07-05T08:59:08.109Z"
+      },
+      "03": {
+        "url": "https://aooofang.cn/api/portfolio/image?path=portfolio-data%2Fuploads%2Fportfolio-ip%2F03-1783241948109.webp",
+        "path": "portfolio-data/uploads/portfolio-ip/03-1783241948109.webp",
+        "updatedAt": "2026-07-05T08:59:08.768Z"
+      },
+      "04": {
+        "url": "https://aooofang.cn/api/portfolio/image?path=portfolio-data%2Fuploads%2Fportfolio-ip%2F04-1783241948768.webp",
+        "path": "portfolio-data/uploads/portfolio-ip/04-1783241948768.webp",
+        "updatedAt": "2026-07-05T08:59:09.584Z"
+      },
+      "05": {
+        "url": "https://aooofang.cn/api/portfolio/image?path=portfolio-data%2Fuploads%2Fportfolio-ip%2F05-1783241949584.webp",
+        "path": "portfolio-data/uploads/portfolio-ip/05-1783241949584.webp",
+        "updatedAt": "2026-07-05T08:59:10.206Z"
+      },
+      "06": {
+        "url": "https://aooofang.cn/api/portfolio/image?path=portfolio-data%2Fuploads%2Fportfolio-ip%2F06-1783241950206.webp",
+        "path": "portfolio-data/uploads/portfolio-ip/06-1783241950206.webp",
+        "updatedAt": "2026-07-05T08:59:10.772Z"
+      },
+      "07": {
+        "url": "https://aooofang.cn/api/portfolio/image?path=portfolio-data%2Fuploads%2Fportfolio-ip%2F07-1783241950772.webp",
+        "path": "portfolio-data/uploads/portfolio-ip/07-1783241950772.webp",
+        "updatedAt": "2026-07-05T08:59:11.417Z"
+      },
+      "08": {
+        "url": "https://aooofang.cn/api/portfolio/image?path=portfolio-data%2Fuploads%2Fportfolio-ip%2F08-1783241951417.webp",
+        "path": "portfolio-data/uploads/portfolio-ip/08-1783241951417.webp",
+        "updatedAt": "2026-07-05T08:59:12.073Z"
+      }
+    }
   }
 }
