@@ -104,6 +104,17 @@
         "updatedAt": "2026-07-05T08:51:36.330Z"
       }
     },
-    "aigc:poster": {}
+    "aigc:poster": {
+      "01": {
+        "url": "https://aooofang.cn/api/portfolio/image?path=portfolio-data%2Fuploads%2Faigc-poster%2F01-1783241631761.webp",
+        "path": "portfolio-data/uploads/aigc-poster/01-1783241631761.webp",
+        "updatedAt": "2026-07-05T08:53:52.465Z"
+      },
+      "02": {
+        "url": "https://aooofang.cn/api/portfolio/image?path=portfolio-data%2Fuploads%2Faigc-poster%2F02-1783241632465.webp",
+        "path": "portfolio-data/uploads/aigc-poster/02-1783241632465.webp",
+        "updatedAt": "2026-07-05T08:53:53.144Z"
+      }
+    }
   }
 }
