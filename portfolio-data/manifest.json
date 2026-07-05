@@ -411,6 +411,67 @@
         "updatedAt": "2026-07-05T08:57:04.378Z"
       }
     },
-    "portfolio:brand": {}
+    "portfolio:brand": {
+      "10": {
+        "url": "https://aooofang.cn/api/portfolio/image?path=portfolio-data%2Fuploads%2Fportfolio-brand%2F10-1783241866955.webp",
+        "path": "portfolio-data/uploads/portfolio-brand/10-1783241866955.webp",
+        "updatedAt": "2026-07-05T08:57:47.606Z"
+      },
+      "11": {
+        "url": "https://aooofang.cn/api/portfolio/image?path=portfolio-data%2Fuploads%2Fportfolio-brand%2F11-1783241867606.webp",
+        "path": "portfolio-data/uploads/portfolio-brand/11-1783241867606.webp",
+        "updatedAt": "2026-07-05T08:57:48.160Z"
+      },
+      "12": {
+        "url": "https://aooofang.cn/api/portfolio/image?path=portfolio-data%2Fuploads%2Fportfolio-brand%2F12-1783241868160.webp",
+        "path": "portfolio-data/uploads/portfolio-brand/12-1783241868160.webp",
+        "updatedAt": "2026-07-05T08:57:48.718Z"
+      },
+      "01": {
+        "url": "https://aooofang.cn/api/portfolio/image?path=portfolio-data%2Fuploads%2Fportfolio-brand%2F01-1783241861335.webp",
+        "path": "portfolio-data/uploads/portfolio-brand/01-1783241861335.webp",
+        "updatedAt": "2026-07-05T08:57:41.977Z"
+      },
+      "02": {
+        "url": "https://aooofang.cn/api/portfolio/image?path=portfolio-data%2Fuploads%2Fportfolio-brand%2F02-1783241861977.webp",
+        "path": "portfolio-data/uploads/portfolio-brand/02-1783241861977.webp",
+        "updatedAt": "2026-07-05T08:57:42.605Z"
+      },
+      "03": {
+        "url": "https://aooofang.cn/api/portfolio/image?path=portfolio-data%2Fuploads%2Fportfolio-brand%2F03-1783241862605.webp",
+        "path": "portfolio-data/uploads/portfolio-brand/03-1783241862605.webp",
+        "updatedAt": "2026-07-05T08:57:43.229Z"
+      },
+      "04": {
+        "url": "https://aooofang.cn/api/portfolio/image?path=portfolio-data%2Fuploads%2Fportfolio-brand%2F04-1783241863229.webp",
+        "path": "portfolio-data/uploads/portfolio-brand/04-1783241863229.webp",
+        "updatedAt": "2026-07-05T08:57:43.883Z"
+      },
+      "05": {
+        "url": "https://aooofang.cn/api/portfolio/image?path=portfolio-data%2Fuploads%2Fportfolio-brand%2F05-1783241863883.webp",
+        "path": "portfolio-data/uploads/portfolio-brand/05-1783241863883.webp",
+        "updatedAt": "2026-07-05T08:57:44.478Z"
+      },
+      "06": {
+        "url": "https://aooofang.cn/api/portfolio/image?path=portfolio-data%2Fuploads%2Fportfolio-brand%2F06-1783241864478.webp",
+        "path": "portfolio-data/uploads/portfolio-brand/06-1783241864478.webp",
+        "updatedAt": "2026-07-05T08:57:45.067Z"
+      },
+      "07": {
+        "url": "https://aooofang.cn/api/portfolio/image?path=portfolio-data%2Fuploads%2Fportfolio-brand%2F07-1783241865067.webp",
+        "path": "portfolio-data/uploads/portfolio-brand/07-1783241865067.webp",
+        "updatedAt": "2026-07-05T08:57:45.786Z"
+      },
+      "08": {
+        "url": "https://aooofang.cn/api/portfolio/image?path=portfolio-data%2Fuploads%2Fportfolio-brand%2F08-1783241865786.webp",
+        "path": "portfolio-data/uploads/portfolio-brand/08-1783241865786.webp",
+        "updatedAt": "2026-07-05T08:57:46.334Z"
+      },
+      "09": {
+        "url": "https://aooofang.cn/api/portfolio/image?path=portfolio-data%2Fuploads%2Fportfolio-brand%2F09-1783241866334.webp",
+        "path": "portfolio-data/uploads/portfolio-brand/09-1783241866334.webp",
+        "updatedAt": "2026-07-05T08:57:46.955Z"
+      }
+    }
   }
 }
