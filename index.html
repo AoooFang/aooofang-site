@@ -9039,7 +9039,7 @@ html.photo-lightbox-lock body {
           <button class="aigc-upload-btn danger" id="aigcUploadClearCurrentBtn" type="button">清除当前</button>
           <button class="aigc-upload-btn danger" id="aigcUploadClearAllBtn" type="button">清除本窗口全部</button>
         </div>
-        <p class="aigc-upload-note">上传图片前需输入管理密码；选择编号后上传图片，批量上传会从当前编号开始依次替换。图片不限长宽比例，按原图数据保存在当前浏览器本地。</p>
+        <p class="aigc-upload-note">上传图片前需输入管理密码；选择编号后上传图片，批量上传会从当前编号开始依次替换。图片不限长宽比例，上传后会保存到线上共享存储，所有访问者都能看到。</p>
         <div class="aigc-upload-status" id="aigcUploadStatus" role="status" aria-live="polite"></div>
         <div class="aigc-upload-slot-grid" id="aigcUploadSlotGrid" aria-label="作品编号上传列表"></div>
       </div>
@@ -11635,5 +11635,7 @@ html.photo-lightbox-lock body {
 <script defer src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"45c2bf8136a245cd97f1c2e9a96c0730","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
 <script defer src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"45c2bf8136a245cd97f1c2e9a96c0730","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
 <script defer src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"45c2bf8136a245cd97f1c2e9a96c0730","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
+
+<script src="./portfolio-online-upload-patch.js"></script>
 </body>
 </html>
