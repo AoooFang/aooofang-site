@@ -59,10 +59,105 @@
       }
     },
     "aigc:ppt": {
+      "10": {
+        "url": "https://aooofang.cn/api/portfolio/image?path=portfolio-data%2Fuploads%2Faigc-ppt%2F10-1784806034125.webp",
+        "path": "portfolio-data/uploads/aigc-ppt/10-1784806034125.webp",
+        "updatedAt": "2026-07-23T11:27:14.852Z"
+      },
+      "11": {
+        "url": "https://aooofang.cn/api/portfolio/image?path=portfolio-data%2Fuploads%2Faigc-ppt%2F11-1784806034852.webp",
+        "path": "portfolio-data/uploads/aigc-ppt/11-1784806034852.webp",
+        "updatedAt": "2026-07-23T11:27:15.673Z"
+      },
+      "12": {
+        "url": "https://aooofang.cn/api/portfolio/image?path=portfolio-data%2Fuploads%2Faigc-ppt%2F12-1784806035673.webp",
+        "path": "portfolio-data/uploads/aigc-ppt/12-1784806035673.webp",
+        "updatedAt": "2026-07-23T11:27:16.664Z"
+      },
+      "13": {
+        "url": "https://aooofang.cn/api/portfolio/image?path=portfolio-data%2Fuploads%2Faigc-ppt%2F13-1784806036665.webp",
+        "path": "portfolio-data/uploads/aigc-ppt/13-1784806036665.webp",
+        "updatedAt": "2026-07-23T11:27:17.408Z"
+      },
+      "14": {
+        "url": "https://aooofang.cn/api/portfolio/image?path=portfolio-data%2Fuploads%2Faigc-ppt%2F14-1784806037408.webp",
+        "path": "portfolio-data/uploads/aigc-ppt/14-1784806037408.webp",
+        "updatedAt": "2026-07-23T11:27:18.337Z"
+      },
+      "15": {
+        "url": "https://aooofang.cn/api/portfolio/image?path=portfolio-data%2Fuploads%2Faigc-ppt%2F15-1784806038337.webp",
+        "path": "portfolio-data/uploads/aigc-ppt/15-1784806038337.webp",
+        "updatedAt": "2026-07-23T11:27:19.120Z"
+      },
+      "16": {
+        "url": "https://aooofang.cn/api/portfolio/image?path=portfolio-data%2Fuploads%2Faigc-ppt%2F16-1784806039121.webp",
+        "path": "portfolio-data/uploads/aigc-ppt/16-1784806039121.webp",
+        "updatedAt": "2026-07-23T11:27:19.885Z"
+      },
+      "17": {
+        "url": "https://aooofang.cn/api/portfolio/image?path=portfolio-data%2Fuploads%2Faigc-ppt%2F17-1784806039886.webp",
+        "path": "portfolio-data/uploads/aigc-ppt/17-1784806039886.webp",
+        "updatedAt": "2026-07-23T11:27:20.681Z"
+      },
+      "18": {
+        "url": "https://aooofang.cn/api/portfolio/image?path=portfolio-data%2Fuploads%2Faigc-ppt%2F18-1784806040681.webp",
+        "path": "portfolio-data/uploads/aigc-ppt/18-1784806040681.webp",
+        "updatedAt": "2026-07-23T11:27:21.367Z"
+      },
+      "19": {
+        "url": "https://aooofang.cn/api/portfolio/image?path=portfolio-data%2Fuploads%2Faigc-ppt%2F19-1784806041367.webp",
+        "path": "portfolio-data/uploads/aigc-ppt/19-1784806041367.webp",
+        "updatedAt": "2026-07-23T11:27:22.332Z"
+      },
+      "20": {
+        "url": "https://aooofang.cn/api/portfolio/image?path=portfolio-data%2Fuploads%2Faigc-ppt%2F20-1784806042332.webp",
+        "path": "portfolio-data/uploads/aigc-ppt/20-1784806042332.webp",
+        "updatedAt": "2026-07-23T11:27:23.066Z"
+      },
       "01": {
-        "url": "https://aooofang.cn/api/portfolio/image?path=portfolio-data%2Fuploads%2Faigc-ppt%2F01-1784806005894.webp",
-        "path": "portfolio-data/uploads/aigc-ppt/01-1784806005894.webp",
-        "updatedAt": "2026-07-23T11:26:46.724Z"
+        "url": "https://aooofang.cn/api/portfolio/image?path=portfolio-data%2Fuploads%2Faigc-ppt%2F01-1784806026973.webp",
+        "path": "portfolio-data/uploads/aigc-ppt/01-1784806026973.webp",
+        "updatedAt": "2026-07-23T11:27:07.805Z"
+      },
+      "02": {
+        "url": "https://aooofang.cn/api/portfolio/image?path=portfolio-data%2Fuploads%2Faigc-ppt%2F02-1784806027805.webp",
+        "path": "portfolio-data/uploads/aigc-ppt/02-1784806027805.webp",
+        "updatedAt": "2026-07-23T11:27:08.674Z"
+      },
+      "03": {
+        "url": "https://aooofang.cn/api/portfolio/image?path=portfolio-data%2Fuploads%2Faigc-ppt%2F03-1784806028674.webp",
+        "path": "portfolio-data/uploads/aigc-ppt/03-1784806028674.webp",
+        "updatedAt": "2026-07-23T11:27:09.480Z"
+      },
+      "04": {
+        "url": "https://aooofang.cn/api/portfolio/image?path=portfolio-data%2Fuploads%2Faigc-ppt%2F04-1784806029480.webp",
+        "path": "portfolio-data/uploads/aigc-ppt/04-1784806029480.webp",
+        "updatedAt": "2026-07-23T11:27:10.290Z"
+      },
+      "05": {
+        "url": "https://aooofang.cn/api/portfolio/image?path=portfolio-data%2Fuploads%2Faigc-ppt%2F05-1784806030290.webp",
+        "path": "portfolio-data/uploads/aigc-ppt/05-1784806030290.webp",
+        "updatedAt": "2026-07-23T11:27:11.083Z"
+      },
+      "06": {
+        "url": "https://aooofang.cn/api/portfolio/image?path=portfolio-data%2Fuploads%2Faigc-ppt%2F06-1784806031083.webp",
+        "path": "portfolio-data/uploads/aigc-ppt/06-1784806031083.webp",
+        "updatedAt": "2026-07-23T11:27:11.841Z"
+      },
+      "07": {
+        "url": "https://aooofang.cn/api/portfolio/image?path=portfolio-data%2Fuploads%2Faigc-ppt%2F07-1784806031841.webp",
+        "path": "portfolio-data/uploads/aigc-ppt/07-1784806031841.webp",
+        "updatedAt": "2026-07-23T11:27:12.599Z"
+      },
+      "08": {
+        "url": "https://aooofang.cn/api/portfolio/image?path=portfolio-data%2Fuploads%2Faigc-ppt%2F08-1784806032599.webp",
+        "path": "portfolio-data/uploads/aigc-ppt/08-1784806032599.webp",
+        "updatedAt": "2026-07-23T11:27:13.405Z"
+      },
+      "09": {
+        "url": "https://aooofang.cn/api/portfolio/image?path=portfolio-data%2Fuploads%2Faigc-ppt%2F09-1784806033405.webp",
+        "path": "portfolio-data/uploads/aigc-ppt/09-1784806033405.webp",
+        "updatedAt": "2026-07-23T11:27:14.125Z"
       }
     },
     "aigc:poster": {
