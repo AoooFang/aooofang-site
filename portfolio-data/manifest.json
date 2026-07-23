@@ -78,6 +78,11 @@
         "url": "https://aooofang.cn/api/portfolio/image?path=portfolio-data%2Fuploads%2Faigc-ppt%2F04-1784807574510.webp",
         "path": "portfolio-data/uploads/aigc-ppt/04-1784807574510.webp",
         "updatedAt": "2026-07-23T11:52:55.371Z"
+      },
+      "05": {
+        "url": "https://aooofang.cn/api/portfolio/image?path=portfolio-data%2Fuploads%2Faigc-ppt%2F05-1784807578487.webp",
+        "path": "portfolio-data/uploads/aigc-ppt/05-1784807578487.webp",
+        "updatedAt": "2026-07-23T11:52:59.396Z"
       }
     },
     "aigc:poster": {
