@@ -19,6 +19,10 @@
     return remoteUploadsCache[collectionKey] || {};
   }
 
+  function hasLoadedRemoteBucket(collectionKey = currentAigcCollectionKey) {
+    return Boolean(remoteLoadState[collectionKey]);
+  }
+
   function setRemoteBucket(collectionKey, items) {
     remoteUploadsCache[collectionKey] = Object.assign({}, items || {});
     remoteLoadState[collectionKey] = true;
@@ -48,7 +52,10 @@
     if (!collectionKey) return {};
     if (!force && remoteLoadState[collectionKey]) return getRemoteBucket(collectionKey);
     try {
-      const data = await requestJson(`${API_ENDPOINTS.list}?collectionKey=${encodeURIComponent(collectionKey)}`);
+      const suffix = force ? `&t=${Date.now()}` : "";
+      const data = await requestJson(`${API_ENDPOINTS.list}?collectionKey=${encodeURIComponent(collectionKey)}${suffix}`, {
+        cache: "no-store"
+      });
       setRemoteBucket(collectionKey, data.items || {});
       return getRemoteBucket(collectionKey);
     } catch (error) {
@@ -79,6 +86,21 @@
     }
   }
 
+  function removeLegacyLocalImage(number) {
+    try {
+      const key = getLegacyStorageKey(number);
+      if (key) localStorage.removeItem(key);
+    } catch (error) {}
+  }
+
+  function clearAllLegacyLocalImages() {
+    const items = (currentAigcCollection && currentAigcCollection.items) || [];
+    const total = getAigcSlotTotal(items);
+    for (let index = 0; index < total; index += 1) {
+      removeLegacyLocalImage(String(index + 1).padStart(2, "0"));
+    }
+  }
+
   function getStoredUploadedImageRemote(number) {
     const bucket = getRemoteBucket();
     const value = bucket[number];
@@ -89,6 +111,7 @@
   function getUploadedImageRemote(number) {
     const remoteImage = getStoredUploadedImageRemote(number);
     if (remoteImage) return remoteImage;
+    if (hasLoadedRemoteBucket()) return "";
     const legacyLocalImage = getLegacyLocalImage(number);
     if (legacyLocalImage) return legacyLocalImage;
     const staticCandidates = getPortfolioStaticImageCandidates(number);
@@ -98,6 +121,7 @@
   function getUploadedImageBackgroundRemote(number, dataUrl = getUploadedImageRemote(number)) {
     const remoteImage = getStoredUploadedImageRemote(number);
     if (remoteImage) return `url("${escapeCssUrl(remoteImage)}")`;
+    if (hasLoadedRemoteBucket()) return "";
 
     const legacyLocalImage = getLegacyLocalImage(number);
     if (legacyLocalImage) return `url("${escapeCssUrl(legacyLocalImage)}")`;
@@ -288,6 +312,7 @@
           numbers: [number]
         })
       });
+      removeLegacyLocalImage(number);
       setRemoteBucket(currentAigcCollectionKey, result.items || {});
       await loadRemoteUploadsForCollection(currentAigcCollectionKey, true);
       await rerenderCurrentCollection(number);
@@ -315,6 +340,7 @@
           all: true
         })
       });
+      clearAllLegacyLocalImages();
       setRemoteBucket(currentAigcCollectionKey, result.items || {});
       await loadRemoteUploadsForCollection(currentAigcCollectionKey, true);
       await rerenderCurrentCollection("01");
