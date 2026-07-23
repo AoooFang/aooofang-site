@@ -65,6 +65,19 @@
     }
   }
 
+  function sanitizeLegacyLocalImagesAgainstRemote() {
+    if (!hasLoadedRemoteBucket()) return;
+    const remoteBucket = getRemoteBucket();
+    const items = (currentAigcCollection && currentAigcCollection.items) || [];
+    const total = getAigcSlotTotal(items);
+    for (let index = 0; index < total; index += 1) {
+      const number = String(index + 1).padStart(2, "0");
+      if (!remoteBucket[number]) {
+        removeLegacyLocalImage(number);
+      }
+    }
+  }
+
   function getLegacyStorageKey(number) {
     if (typeof AIGC_UPLOAD_STORAGE_PREFIX !== "string") return "";
     return `${AIGC_UPLOAD_STORAGE_PREFIX}${currentAigcCollectionKey}:${number}`;
@@ -444,6 +457,7 @@
       currentAigcCollectionKey = getAigcCollectionStorageKey(source, collection);
       setUploadNoteText();
       await loadRemoteUploadsForCollection(currentAigcCollectionKey, false);
+      sanitizeLegacyLocalImagesAgainstRemote();
       const result = await originalRenderAigcCollection.call(this, source, options);
       bindRemoteUploadControls();
       updateSyncHint();
